@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { TransitProvider, useTransit } from './context/TransitContext';
 import { Header } from './components/Header';
+import { WeatherBanner } from './components/WeatherBanner';
 import { TripPlanner } from './components/TripPlanner';
 import { ResultCard } from './components/ResultCard';
 import { NetworkExplorer } from './components/NetworkExplorer';
@@ -30,6 +31,9 @@ function MainApp() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100 text-slate-800 font-sans" dir="rtl">
+      {/* Live Cairo Weather & Smart Transit Advice Banner */}
+      <WeatherBanner />
+
       {/* Top Navbar */}
       <Header activeTab={activeTab} setActiveTab={setActiveTab} />
 
