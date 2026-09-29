@@ -53,7 +53,7 @@ interface TransitContextType {
 }
 
 const STORAGE_KEY_STATIONS = 'egypt_transit_stations_v2';
-const STORAGE_KEY_FARES = 'egypt_transit_fares_v2';
+const STORAGE_KEY_FARES = 'egypt_transit_fares_v3';
 
 const TransitContext = createContext<TransitContextType | undefined>(undefined);
 

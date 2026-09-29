@@ -23,6 +23,8 @@ import {
   CheckCircle,
   HelpCircle,
   Sparkles,
+  Cpu,
+  Layers,
 } from 'lucide-react';
 
 function MainApp() {
@@ -30,80 +32,105 @@ function MainApp() {
   const { isDataCustomized } = useTransit();
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-100 text-slate-800 font-sans" dir="rtl">
-      {/* Live Cairo Weather & Smart Transit Advice Banner */}
+    <div className="min-h-screen flex flex-col cyber-grid-bg text-slate-100 font-sans selection:bg-[#00f0ff] selection:text-[#060911]" dir="rtl">
+      {/* Live Cairo Weather & Smart Transit Advice Banner in Cyberpunk Theme */}
       <WeatherBanner />
 
-      {/* Top Navbar */}
+      {/* Top Navbar with Glowing Title, Language Links عربي | English, and Subtle Admin Gear */}
       <Header activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Hero Intro Banner */}
-      <section className="bg-gradient-to-b from-slate-900 to-slate-800 text-white pt-8 pb-10 sm:pb-14 border-b border-slate-700/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>منظومة النقل الجماعي الذكي والأخضر 2026</span>
-            </div>
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-2 leading-tight">
-              عالم المواصلات في مصر الحديثة
-            </h1>
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-              دليل ذكي لحساب أسعار التذاكر وخطوط السير والتبديلات لمحطات مترو القاهرة، القطار الكهربائي، المونوريل، والأتوبيس الترددي.
-            </p>
-
-            {isDataCustomized && (
-              <div className="mt-3 inline-flex items-center gap-2 text-xs text-amber-300 bg-amber-500/10 px-3 py-1 rounded-md border border-amber-500/20">
-                <span>⚡ يتم استخدام إعدادات تسعير ومحطات معدلة من قبل المشرف</span>
-              </div>
-            )}
-          </div>
+      <section className="relative pt-8 pb-10 sm:pb-12 text-center max-w-5xl mx-auto px-4">
+        <div className="inline-flex items-center gap-2 text-xs font-mono font-bold px-3.5 py-1.5 rounded-full bg-[#0a1526] text-[#00f0ff] border border-[#00f0ff]/40 shadow-[0_0_12px_rgba(0,240,255,0.3)] mb-4 animate-neon-pulse">
+          <Cpu className="w-3.5 h-3.5 text-[#00f0ff]" />
+          <span>CYBERNETIC TRANSIT SYSTEM // 2026</span>
         </div>
+
+        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-3 neon-text-blue leading-tight">
+          عالم المواصلات في مصر الحديثة
+        </h1>
+        <p className="text-xs sm:text-base text-[#a5f3fc] max-w-2xl mx-auto leading-relaxed font-mono opacity-90">
+          دليل ذكي لحساب أسعار التذاكر وخطوط السير والتبديلات لمحطات مترو القاهرة، القطار الكهربائي، المونوريل، والأتوبيس الترددي.
+        </p>
+
+        {isDataCustomized && (
+          <div className="mt-3 inline-flex items-center gap-2 text-xs text-amber-300 bg-amber-950/60 px-3 py-1 rounded-md border border-amber-400/50 shadow-[0_0_10px_rgba(245,158,11,0.2)] font-mono">
+            <span>⚡ SYSTEM OVERRIDE: إعدادات تسعير ومحطات معدلة من قبل المشرف</span>
+          </div>
+        )}
       </section>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 z-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 z-10 pb-16">
         {activeTab === 'planner' && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              {/* Left Column: Trip Planner Form */}
-              <div className="lg:col-span-7 space-y-6">
-                <TripPlanner />
-
-                {/* Quick Info / Guide Card */}
-                <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs">
-                  <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide mb-3 flex items-center gap-2">
-                    <HelpCircle className="w-4 h-4 text-blue-600" />
-                    كيف تحسب رحلتك في 3 خطوات بسيطة:
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-600">
-                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                      <span className="font-bold text-blue-600 block mb-1">1. اختر المشروع</span>
-                      المترو أو القطار الكهربائي أو المونوريل أو الأتوبيس الترددي.
-                    </div>
-                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                      <span className="font-bold text-blue-600 block mb-1">2. حدد المحطات</span>
-                      اختر محطة الركوب ومحطة النزول من القوائم الذكية.
-                    </div>
-                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                      <span className="font-bold text-blue-600 block mb-1">3. احصل على التذكرة</span>
-                      شاهد السعر، عدد المحطات، والتبديلات إن وجدت فورياً.
-                    </div>
-                  </div>
+          <div className="space-y-12">
+            {/* The composition is a single high-tech, dark charcoal-grey card with continuous brilliant neon blue edge lighting effect over a dark reflective floor surface */}
+            <div className="neon-blue-card reflective-floor rounded-3xl p-5 sm:p-8 lg:p-10">
+              {/* Card Top Ambient HUD Bar */}
+              <div className="flex items-center justify-between border-b border-[#00f0ff]/30 pb-4 mb-7 text-xs font-mono">
+                <div className="flex items-center gap-2 text-[#00f0ff]">
+                  <Layers className="w-4 h-4 text-[#00f0ff] animate-pulse" />
+                  <span className="font-bold tracking-wider">CORE TRANSIT MATRIX // حاسبة الرحلات الرسمية</span>
+                </div>
+                <div className="hidden sm:flex items-center gap-3 text-slate-400 text-[11px]">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#00f0ff] animate-ping"></span>
+                    ONLINE
+                  </span>
+                  <span>·</span>
+                  <span>EGYPT SMART MOBILITY</span>
                 </div>
               </div>
 
-              {/* Right Column: Result Card */}
-              <div className="lg:col-span-5 sticky top-24">
-                <ResultCard />
+              {/* Dual Column Layout inside the single high-tech card */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
+                {/* Left Column: Trip Planner Form & Cyber Info Guide */}
+                <div className="lg:col-span-7 space-y-6">
+                  <TripPlanner />
+
+                  {/* 3-Step Quick Guide in Cyber Charcoal style */}
+                  <div className="bg-[#090f1a] rounded-2xl border border-[#00f0ff]/30 p-5 shadow-[inset_0_0_15px_rgba(0,240,255,0.06)]">
+                    <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-3.5 flex items-center gap-2 font-mono neon-text-subtle">
+                      <HelpCircle className="w-4 h-4 text-[#00f0ff]" />
+                      كيفية حساب الرحلة في 3 خطوات بسيطة:
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300 font-mono">
+                      <div className="p-3.5 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
+                        <span className="font-bold text-[#00f0ff] block mb-1">1. اختر المشروع</span>
+                        المترو، القطار السريع، المونوريل، أو الأتوبيس الترددي BRT.
+                      </div>
+                      <div className="p-3.5 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
+                        <span className="font-bold text-[#00f0ff] block mb-1">2. حدد المحطات</span>
+                        اختر محطتي الركوب والنزول من القوائم الذكية.
+                      </div>
+                      <div className="p-3.5 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
+                        <span className="font-bold text-[#00f0ff] block mb-1">3. التذكرة والمسار</span>
+                        شاهد عدد المحطات، سعر التذكرة، والتبديلات إن وجدت.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column: Result Card (framed train, neon labels & values, solid neon button) */}
+                <div className="lg:col-span-5 sticky top-24">
+                  <ResultCard />
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        {activeTab === 'explorer' && <NetworkExplorer />}
+        {activeTab === 'explorer' && (
+          <div className="neon-blue-card reflective-floor rounded-3xl p-5 sm:p-8">
+            <NetworkExplorer />
+          </div>
+        )}
 
-        {activeTab === 'fares' && <FareGuide />}
+        {activeTab === 'fares' && (
+          <div className="neon-blue-card reflective-floor rounded-3xl p-5 sm:p-8">
+            <FareGuide />
+          </div>
+        )}
       </main>
 
       {/* Hidden Admin Passcode Modal & Admin Dashboard */}

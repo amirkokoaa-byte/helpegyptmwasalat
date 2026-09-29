@@ -9,19 +9,119 @@
   }
 }
 
-/* Custom smooth scrollbar */
+/* Futuristic Cyberpunk Tech Grid & Neon Lighting */
+.cyber-grid-bg {
+  background-color: #060911;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(0, 240, 255, 0.15) 0%, transparent 65%),
+    radial-gradient(ellipse at 50% 100%, rgba(0, 180, 255, 0.08) 0%, transparent 50%),
+    linear-gradient(to right, rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+}
+
+/* Intense continuous neon blue edge lighting effect */
+.neon-blue-card {
+  background: linear-gradient(145deg, #111823 0%, #0c1017 100%);
+  border: 1.5px solid #00f0ff;
+  box-shadow: 
+    0 0 15px rgba(0, 240, 255, 0.5),
+    0 0 35px rgba(0, 240, 255, 0.25),
+    inset 0 0 20px rgba(0, 240, 255, 0.08);
+  position: relative;
+}
+
+/* Floor reflection effect beneath floating card */
+.reflective-floor {
+  position: relative;
+}
+.reflective-floor::after {
+  content: "";
+  position: absolute;
+  bottom: -28px;
+  left: 5%;
+  right: 5%;
+  height: 28px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0, 240, 255, 0.35) 0%, rgba(0, 240, 255, 0.1) 40%, transparent 80%);
+  filter: blur(8px);
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+/* Glowing text effects */
+.neon-text-blue {
+  color: #00f0ff;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 20px rgba(0, 240, 255, 0.4);
+}
+
+.neon-text-subtle {
+  color: #a5f3fc;
+  text-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+}
+
+/* Neon blue borders & controls */
+.neon-border-blue {
+  border: 1px solid #00f0ff;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.35), inset 0 0 5px rgba(0, 240, 255, 0.1);
+}
+
+.neon-border-subtle {
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.2);
+}
+
+/* Solid glowing neon blue button */
+.btn-neon-solid {
+  background-color: #00f0ff;
+  color: #060911;
+  font-weight: 800;
+  border: 1px solid #7df9ff;
+  box-shadow: 
+    0 0 15px rgba(0, 240, 255, 0.7),
+    0 0 30px rgba(0, 240, 255, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-neon-solid:hover {
+  background-color: #38f4ff;
+  box-shadow: 
+    0 0 22px rgba(0, 240, 255, 0.95),
+    0 0 45px rgba(0, 240, 255, 0.6);
+  transform: translateY(-1px);
+}
+.btn-neon-solid:active {
+  transform: translateY(1px);
+}
+
+/* Pulse animation for neon rings */
+@keyframes neon-pulse {
+  0%, 100% {
+    opacity: 0.85;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.8), 0 0 45px rgba(0, 240, 255, 0.4);
+  }
+}
+.animate-neon-pulse {
+  animation: neon-pulse 3s infinite ease-in-out;
+}
+
+/* Custom smooth dark scrollbar */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #090d16;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #0e3b56;
   border-radius: 4px;
+  border: 1px solid rgba(0, 240, 255, 0.2);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #00f0ff;
 }
 

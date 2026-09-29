@@ -67,22 +67,6 @@ export const TripPlanner: React.FC = () => {
     return stations.filter((s) => s.modeId === selectedModeId);
   }, [stations, selectedModeId]);
 
-  // Filtered station list for ride (start)
-  const filteredStartStations = useMemo(() => {
-    if (!startSearch.trim()) return currentModeStations;
-    return currentModeStations.filter((s) =>
-      s.name.toLowerCase().includes(startSearch.trim().toLowerCase())
-    );
-  }, [currentModeStations, startSearch]);
-
-  // Filtered station list for drop-off (end)
-  const filteredEndStations = useMemo(() => {
-    if (!endSearch.trim()) return currentModeStations;
-    return currentModeStations.filter((s) =>
-      s.name.toLowerCase().includes(endSearch.trim().toLowerCase())
-    );
-  }, [currentModeStations, endSearch]);
-
   const startStation = currentModeStations.find((s) => s.id === startStationId);
   const endStation = currentModeStations.find((s) => s.id === endStationId);
 
@@ -110,31 +94,52 @@ export const TripPlanner: React.FC = () => {
   const getModeIcon = (id: TransportModeId) => {
     switch (id) {
       case 'metro':
-        return <Train className="w-5 h-5" />;
+        return <Train className="w-5 h-5 text-[#00f0ff]" />;
       case 'lrt_train':
-        return <Zap className="w-5 h-5" />;
+        return <Zap className="w-5 h-5 text-[#00f0ff]" />;
       case 'monorail':
-        return <Compass className="w-5 h-5" />;
+        return <Compass className="w-5 h-5 text-[#00f0ff]" />;
       case 'brt':
-        return <Bus className="w-5 h-5" />;
+        return <Bus className="w-5 h-5 text-[#00f0ff]" />;
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-7 transition-all">
-      {/* Step 1: Project / Transport Mode Selector */}
+    <div className="bg-[#0b101b] rounded-2xl border border-[#00f0ff]/40 p-5 sm:p-7 shadow-[0_0_20px_rgba(0,240,255,0.15)] relative overflow-hidden">
+      {/* Subtle corner tech accent */}
+      <div className="absolute top-0 right-0 w-16 h-16 bg-[radial-gradient(ellipse_at_top_right,rgba(0,240,255,0.15),transparent_70%)] pointer-events-none"></div>
+
+      {/* Step 1: Project / Transport Mode Selector with glowing dropdown & buttons */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
-          <label className="text-sm font-bold text-slate-900 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>
-            اختر وسيلة أو مشروع المواصلات
+          <label className="text-xs sm:text-sm font-bold text-slate-100 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#00f0ff] shadow-[0_0_8px_#00f0ff] inline-block animate-pulse"></span>
+            <span className="neon-text-subtle tracking-wide">اختيار مشروع وسيلة المواصلات:</span>
           </label>
-          <span className="text-xs text-slate-500 font-medium">
-            {currentModeStations.length} محطة متاحة
+          <span className="text-[11px] font-mono text-[#00f0ff] bg-[#071322] px-2.5 py-0.5 rounded border border-[#00f0ff]/40">
+            {currentModeStations.length} STATIONS LOADED
           </span>
         </div>
 
-        {/* Mode cards / segmented selector */}
+        {/* Dynamic Project Selection Dropdown Menu (Directly requested) */}
+        <div className="mb-3.5 block sm:hidden">
+          <div className="relative">
+            <select
+              value={selectedModeId}
+              onChange={(e) => setSelectedModeId(e.target.value as TransportModeId)}
+              className="w-full h-12 bg-[#080d18] text-[#00f0ff] font-bold text-sm rounded-xl px-4 py-2.5 border border-[#00f0ff] shadow-[0_0_12px_rgba(0,240,255,0.4)] focus:outline-none appearance-none cursor-pointer"
+            >
+              {modes.map((m) => (
+                <option key={m.id} value={m.id} className="bg-[#0b1220] text-slate-100">
+                  {m.name} ({m.badge})
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-5 h-5 text-[#00f0ff] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+        </div>
+
+        {/* Mode cards / glowing buttons */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
           {modes.map((mode) => {
             const isSelected = selectedModeId === mode.id;
@@ -143,36 +148,40 @@ export const TripPlanner: React.FC = () => {
                 key={mode.id}
                 type="button"
                 onClick={() => setSelectedModeId(mode.id)}
-                className={`flex flex-col text-right p-3.5 rounded-xl border transition-all relative text-slate-800 ${
+                className={`flex flex-col text-right p-3.5 rounded-xl transition-all relative ${
                   isSelected
-                    ? 'border-blue-600 bg-blue-50/50 shadow-sm ring-1 ring-blue-500/20'
-                    : 'border-slate-200 hover:border-slate-300 bg-slate-50/60 hover:bg-slate-100/70'
+                    ? 'border-2 border-[#00f0ff] bg-[#0d1728] shadow-[0_0_15px_rgba(0,240,255,0.5),inset_0_0_10px_rgba(0,240,255,0.2)]'
+                    : 'border border-[#00f0ff]/25 hover:border-[#00f0ff]/60 bg-[#080c16]/80 hover:bg-[#0c1424]'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <div
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
+                    className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
                       isSelected
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white text-slate-600 border border-slate-200'
+                        ? 'bg-[#00f0ff] text-[#060911] shadow-[0_0_12px_#00f0ff]'
+                        : 'bg-[#0b1322] border border-[#00f0ff]/40 text-[#00f0ff]'
                     }`}
                   >
                     {getModeIcon(mode.id)}
                   </div>
                   <span
-                    className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold ${
                       isSelected
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-slate-200/70 text-slate-600'
+                        ? 'bg-[#00f0ff] text-[#060911]'
+                        : 'bg-[#0c182a] text-[#38bdf8] border border-[#00f0ff]/30'
                     }`}
                   >
                     {mode.badge}
                   </span>
                 </div>
-                <span className="font-bold text-sm text-slate-900 leading-snug">
+                <span
+                  className={`font-extrabold text-sm leading-snug transition-colors ${
+                    isSelected ? 'neon-text-blue' : 'text-slate-200'
+                  }`}
+                >
                   {mode.name}
                 </span>
-                <span className="text-xs text-slate-500 mt-1 line-clamp-1">
+                <span className="text-[11px] text-slate-400 mt-1 line-clamp-1 font-mono">
                   {mode.subtitle}
                 </span>
               </button>
@@ -181,11 +190,11 @@ export const TripPlanner: React.FC = () => {
         </div>
       </div>
 
-      {/* Mode Brief Info Bar */}
-      <div className="mb-6 p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-start gap-2.5 text-xs text-slate-600">
-        <Info className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+      {/* Mode Brief Info Bar with Glowing Neon Line */}
+      <div className="mb-6 p-3 sm:p-3.5 rounded-xl bg-[#080e1b] border border-[#00f0ff]/30 flex items-start gap-2.5 text-xs text-slate-300 shadow-[inset_0_0_10px_rgba(0,240,255,0.08)]">
+        <Info className="w-4 h-4 text-[#00f0ff] shrink-0 mt-0.5 animate-pulse" />
         <div className="leading-relaxed">
-          <strong className="text-slate-800 ml-1">{currentMode.name}:</strong>
+          <strong className="text-[#00f0ff] ml-1">{currentMode.name}:</strong>
           {currentMode.description}
         </div>
       </div>
@@ -195,12 +204,12 @@ export const TripPlanner: React.FC = () => {
         {/* Ride Station (محطة الركوب) */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label className="text-xs sm:text-sm font-semibold text-slate-800 flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block ring-2 ring-emerald-100"></span>
-              محطة الركوب (البداية)
+            <label className="text-xs sm:text-sm font-bold text-slate-200 flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#00f0ff] inline-block shadow-[0_0_6px_#00f0ff]"></span>
+              <span className="neon-text-subtle">محطة الركوب (البداية)</span>
             </label>
             {startStation && (
-              <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-medium border border-emerald-200">
+              <span className="text-[11px] text-[#00f0ff] bg-[#071526] px-2 py-0.5 rounded font-medium border border-[#00f0ff]/40 shadow-[0_0_6px_rgba(0,240,255,0.2)]">
                 {lines.find((l) => l.id === startStation.lineId)?.name.split('(')[0] || 'خط المسار'}
               </span>
             )}
@@ -210,22 +219,22 @@ export const TripPlanner: React.FC = () => {
             <select
               value={startStationId}
               onChange={(e) => setStartStationId(e.target.value)}
-              className="w-full h-12 bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow appearance-none cursor-pointer"
+              className="w-full h-12 bg-[#060a13] border border-[#00f0ff]/60 rounded-xl px-4 py-2.5 text-sm font-semibold text-white focus:outline-none focus:border-[#00f0ff] focus:ring-1 focus:ring-[#00f0ff] shadow-[0_0_10px_rgba(0,240,255,0.25)] transition-all appearance-none cursor-pointer"
             >
-              <option value="" disabled>
+              <option value="" disabled className="bg-[#0b101b] text-slate-400">
                 -- حدد محطة الركوب --
               </option>
               {groupedStations.map((group) => (
-                <optgroup key={group.lineName} label={`📍 ${group.lineName}`}>
+                <optgroup key={group.lineName} label={`📍 ${group.lineName}`} className="bg-[#0b1220] text-[#00f0ff] font-bold">
                   {group.stations.map((station) => (
-                    <option key={station.id} value={station.id}>
+                    <option key={station.id} value={station.id} className="bg-[#080d18] text-slate-200">
                       {station.name} {station.isInterchange ? '⚡ (تبادلية)' : ''}
                     </option>
                   ))}
                 </optgroup>
               ))}
             </select>
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#00f0ff]">
               <ChevronDown className="w-4 h-4" />
             </div>
           </div>
@@ -238,7 +247,7 @@ export const TripPlanner: React.FC = () => {
             onClick={swapStations}
             disabled={!startStationId || !endStationId}
             title="تبديل محطة الركوب والنزول"
-            className="w-11 h-11 rounded-xl bg-slate-100 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-slate-600 hover:text-blue-600 flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed group shadow-sm active:scale-95"
+            className="w-11 h-11 rounded-xl bg-[#09121f] hover:bg-[#00f0ff] hover:text-[#060911] border border-[#00f0ff]/60 text-[#00f0ff] flex items-center justify-center transition-all disabled:opacity-30 disabled:cursor-not-allowed group shadow-[0_0_12px_rgba(0,240,255,0.35)] active:scale-95"
           >
             <ArrowUpDown className="w-5 h-5 transition-transform group-hover:rotate-180 duration-300" />
           </button>
@@ -247,12 +256,12 @@ export const TripPlanner: React.FC = () => {
         {/* Drop-off Station (محطة النزول) */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label className="text-xs sm:text-sm font-semibold text-slate-800 flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block ring-2 ring-rose-100"></span>
-              محطة النزول (الوصول)
+            <label className="text-xs sm:text-sm font-bold text-slate-200 flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8] inline-block shadow-[0_0_6px_#38bdf8]"></span>
+              <span className="neon-text-subtle">محطة النزول (الوصول)</span>
             </label>
             {endStation && (
-              <span className="text-[11px] text-rose-700 bg-rose-50 px-2 py-0.5 rounded font-medium border border-rose-200">
+              <span className="text-[11px] text-[#38bdf8] bg-[#071526] px-2 py-0.5 rounded font-medium border border-[#38bdf8]/40 shadow-[0_0_6px_rgba(56,189,248,0.2)]">
                 {lines.find((l) => l.id === endStation.lineId)?.name.split('(')[0] || 'خط المسار'}
               </span>
             )}
@@ -262,22 +271,22 @@ export const TripPlanner: React.FC = () => {
             <select
               value={endStationId}
               onChange={(e) => setEndStationId(e.target.value)}
-              className="w-full h-12 bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow appearance-none cursor-pointer"
+              className="w-full h-12 bg-[#060a13] border border-[#00f0ff]/60 rounded-xl px-4 py-2.5 text-sm font-semibold text-white focus:outline-none focus:border-[#00f0ff] focus:ring-1 focus:ring-[#00f0ff] shadow-[0_0_10px_rgba(0,240,255,0.25)] transition-all appearance-none cursor-pointer"
             >
-              <option value="" disabled>
+              <option value="" disabled className="bg-[#0b101b] text-slate-400">
                 -- حدد محطة النزول --
               </option>
               {groupedStations.map((group) => (
-                <optgroup key={group.lineName} label={`📍 ${group.lineName}`}>
+                <optgroup key={group.lineName} label={`📍 ${group.lineName}`} className="bg-[#0b1220] text-[#00f0ff] font-bold">
                   {group.stations.map((station) => (
-                    <option key={station.id} value={station.id}>
+                    <option key={station.id} value={station.id} className="bg-[#080d18] text-slate-200">
                       {station.name} {station.isInterchange ? '⚡ (تبادلية)' : ''}
                     </option>
                   ))}
                 </optgroup>
               ))}
             </select>
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#00f0ff]">
               <ChevronDown className="w-4 h-4" />
             </div>
           </div>
@@ -285,10 +294,10 @@ export const TripPlanner: React.FC = () => {
       </div>
 
       {/* Quick Select Popular Stations */}
-      <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center gap-2">
-        <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-          محطات سريعة:
+      <div className="mt-5 pt-4 border-t border-[#00f0ff]/20 flex flex-wrap items-center gap-2">
+        <span className="text-xs font-bold text-[#00f0ff] flex items-center gap-1">
+          <Sparkles className="w-3.5 h-3.5 text-[#00f0ff] animate-pulse" />
+          محطات مقترحة:
         </span>
         {popularStationIds.map((id) => {
           const st = stations.find((s) => s.id === id);
@@ -306,7 +315,7 @@ export const TripPlanner: React.FC = () => {
                   setEndStationId(st.id);
                 }
               }}
-              className="px-2.5 py-1 text-xs rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors border border-slate-200/60 font-medium"
+              className="px-2.5 py-1 text-xs rounded-lg bg-[#091422] hover:bg-[#00f0ff] hover:text-[#060911] text-[#7dd3fc] transition-all border border-[#00f0ff]/30 font-medium shadow-[0_0_6px_rgba(0,240,255,0.15)]"
             >
               {st.name}
             </button>
@@ -317,10 +326,10 @@ export const TripPlanner: React.FC = () => {
           <button
             type="button"
             onClick={clearSelection}
-            className="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1 py-1 transition-colors"
+            className="text-xs text-slate-400 hover:text-[#00f0ff] flex items-center gap-1 py-1 transition-colors font-mono"
           >
             <RotateCcw className="w-3 h-3" />
-            إعادة تعيين
+            RESET // إعادة تعيين
           </button>
         </div>
       </div>

@@ -1,9 +1,12 @@
-import React from 'react';
-import { DollarSign, ShieldAlert, HeartHandshake, Award, Users, Train, Zap, Compass, Bus } from 'lucide-react';
+import React, { useState } from 'react';
+import { DollarSign, ShieldAlert, HeartHandshake, Award, Users, Train, Zap, Compass, Bus, Sparkles } from 'lucide-react';
 import { useTransit } from '../context/TransitContext';
+import { SubscriptionsModal } from './SubscriptionsModal';
 
 export const FareGuide: React.FC = () => {
   const { modes, fareBrackets, setIsAdminModalOpen, isAdminAuthenticated, setIsAdminDashboardOpen } = useTransit();
+  const [modalModeId, setModalModeId] = useState<'metro' | 'monorail' | 'brt' | 'lrt_train'>('metro');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -15,23 +18,37 @@ export const FareGuide: React.FC = () => {
               دليل أسعار وشرائح تذاكر منظومة النقل الحديثة
             </h2>
             <p className="text-xs sm:text-sm text-slate-500">
-              جدول رسمي بشرائح أسعار التذاكر طبقاً لعدد المحطات وتحديثات وزارة النقل المصرية والهيئة القومية للأنفاق.
+              جدول رسمي بشرائح أسعار التذاكر العادية طبقاً لعدد المحطات، والاشتراكات المعتمدة من وزارة النقل والهيئة القومية للأنفاق.
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => {
-              if (isAdminAuthenticated) {
-                setIsAdminDashboardOpen(true);
-              } else {
-                setIsAdminModalOpen(true);
-              }
-            }}
-            className="self-start sm:self-auto px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors"
-          >
-            تعديل الأسعار (لوحة الإدارة)
-          </button>
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+            <button
+              type="button"
+              onClick={() => {
+                setModalModeId('metro');
+                setIsModalOpen(true);
+              }}
+              className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>جدول الاشتراكات والفئات الخاصة</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (isAdminAuthenticated) {
+                  setIsAdminDashboardOpen(true);
+                } else {
+                  setIsAdminModalOpen(true);
+                }
+              }}
+              className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors"
+            >
+              تعديل الأسعار (الإدارة)
+            </button>
+          </div>
         </div>
       </div>
 
@@ -143,6 +160,13 @@ export const FareGuide: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Subscriptions & Special Categories Modal */}
+      <SubscriptionsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        initialModeId={modalModeId}
+      />
     </div>
   );
 };

@@ -101,28 +101,28 @@ export const WeatherBanner: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-950/90 text-slate-200 border-b border-slate-800 text-xs py-2 px-3 sm:px-6">
+    <div className="bg-[#050811] text-slate-200 border-b border-[#00f0ff]/25 text-xs py-2 px-3 sm:px-6 shadow-[0_0_15px_rgba(0,0,0,0.8)] font-mono">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
         {/* Weather Metrics */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="flex items-center gap-1.5 bg-slate-900/90 px-2.5 py-1 rounded-lg border border-slate-700/60">
+          <div className="flex items-center gap-1.5 bg-[#091220] px-2.5 py-1 rounded-lg border border-[#00f0ff]/40 shadow-[0_0_8px_rgba(0,240,255,0.2)]">
             {getWeatherIcon()}
-            <span className="font-bold text-white tracking-wide">طقس القاهرة الآن:</span>
-            <span className="font-extrabold text-blue-400 font-mono tabular-nums">{weather.temp}°C</span>
-            <span className="text-slate-400 font-medium">({weather.condition})</span>
+            <span className="font-bold text-white tracking-wide">طقس القاهرة // CAIRO WX:</span>
+            <span className="font-black text-[#00f0ff] font-mono tabular-nums neon-text-blue">{weather.temp}°C</span>
+            <span className="text-[#7dd3fc] font-medium">({weather.condition})</span>
           </div>
 
           <div className="hidden sm:flex items-center gap-2 text-slate-400 text-[11px]">
-            <span>الرطوبة: <strong className="text-slate-300 font-mono">{weather.humidity}%</strong></span>
+            <span>الرطوبة: <strong className="text-[#38bdf8] font-mono">{weather.humidity}%</strong></span>
             <span>·</span>
-            <span>الرياح: <strong className="text-slate-300 font-mono">{weather.windSpeed} كم/س</strong></span>
+            <span>الرياح: <strong className="text-[#38bdf8] font-mono">{weather.windSpeed} كم/س</strong></span>
           </div>
         </div>
 
         {/* Smart transit advice badge */}
         <div className="flex-1 flex items-center justify-center md:justify-start gap-2 text-center md:text-right px-2 min-w-0">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse"></span>
-          <p className="text-[11px] sm:text-xs text-slate-300 font-medium truncate">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#00f0ff] shrink-0 animate-ping"></span>
+          <p className="text-[11px] sm:text-xs text-[#a5f3fc] font-medium truncate">
             {weather.recommendation}
           </p>
         </div>
@@ -132,11 +132,11 @@ export const WeatherBanner: React.FC = () => {
           type="button"
           onClick={fetchLiveWeather}
           disabled={loading}
-          className="shrink-0 text-[11px] text-slate-400 hover:text-white flex items-center gap-1 bg-slate-900/80 hover:bg-slate-800 px-2 py-0.5 rounded border border-slate-700/50 transition-colors"
+          className="shrink-0 text-[11px] text-[#00f0ff] hover:text-white flex items-center gap-1 bg-[#091526] hover:bg-[#00f0ff] hover:text-[#060911] px-2.5 py-1 rounded border border-[#00f0ff]/40 transition-all cursor-pointer shadow-[0_0_6px_rgba(0,240,255,0.2)]"
           title="تحديث بيانات الطقس الحالية"
         >
           <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
-          <span className="hidden sm:inline">تحديث</span>
+          <span className="hidden sm:inline">REFRESH // تحديث</span>
         </button>
       </div>
     </div>

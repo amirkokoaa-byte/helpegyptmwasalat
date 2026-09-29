@@ -13,34 +13,66 @@ import {
   Sparkles,
   ChevronDown,
   ChevronUp,
+  CreditCard,
+  Zap,
 } from 'lucide-react';
 import { useTransit } from '../context/TransitContext';
+import { SubscriptionsModal } from './SubscriptionsModal';
+import { CyberpunkTrainGraphic } from './CyberpunkTrainGraphic';
 
 export const ResultCard: React.FC = () => {
-  const { routeResult, lines, startStationId, endStationId } = useTransit();
+  const { routeResult, lines, startStationId, endStationId, selectedModeId, modes } = useTransit();
   const [copied, setCopied] = useState(false);
   const [showFullTimeline, setShowFullTimeline] = useState(false);
+  const [isSubscriptionsModalOpen, setIsSubscriptionsModalOpen] = useState(false);
 
+  const currentMode = modes.find((m) => m.id === selectedModeId) || modes[0];
+
+  // If no stations are selected yet, display high-tech cyberpunk preview card
   if (!startStationId || !endStationId) {
     return (
-      <div className="bg-white rounded-2xl border border-dashed border-slate-300 p-8 text-center text-slate-500">
-        <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400">
-          <Ticket className="w-6 h-6" />
+      <div className="bg-[#0b101b] rounded-2xl border border-[#00f0ff]/40 p-6 sm:p-7 text-center relative overflow-hidden shadow-[0_0_20px_rgba(0,240,255,0.15)]">
+        {/* Subtle HUD background element */}
+        <div className="absolute top-2 left-2 text-[9px] font-mono text-[#00f0ff]/50">STATUS: STANDBY</div>
+        
+        {/* Modern Train framed by glowing neon border (Directly requested) */}
+        <CyberpunkTrainGraphic modeName={currentMode.name} />
+
+        <div className="w-12 h-12 rounded-full bg-[#081525] border border-[#00f0ff] flex items-center justify-center mx-auto mb-3 text-[#00f0ff] shadow-[0_0_15px_rgba(0,240,255,0.5)]">
+          <Ticket className="w-6 h-6 animate-pulse" />
         </div>
-        <h3 className="font-semibold text-slate-700 text-base mb-1">حدد محطتي الركوب والنزول</h3>
-        <p className="text-xs text-slate-400 max-w-sm mx-auto">
-          اختر محطة البداية والنهاية من القوائم أعلاه لعرض مسار الرحلة، عدد المحطات، والتعريفة بدقة.
+        <h3 className="font-extrabold text-white text-base sm:text-lg mb-1 neon-text-blue">
+          حدد محطتي الركوب والنزول
+        </h3>
+        <p className="text-xs text-[#7dd3fc]/80 max-w-sm mx-auto mb-4 font-mono leading-relaxed">
+          اختر محطة البداية والنهاية من القوائم لعرض المسار التفاعلي، عدد المحطات، وسعر التذكرة العادية.
         </p>
+
+        {/* Central button also accessible here */}
+        <button
+          type="button"
+          onClick={() => setIsSubscriptionsModalOpen(true)}
+          className="btn-neon-solid w-full py-3 rounded-xl text-sm flex items-center justify-center gap-2"
+        >
+          <Sparkles className="w-4 h-4 fill-slate-950" />
+          <span>عرض الاشتراكات والفئات الخاصة</span>
+        </button>
+
+        <SubscriptionsModal
+          isOpen={isSubscriptionsModalOpen}
+          onClose={() => setIsSubscriptionsModalOpen(false)}
+          initialModeId={selectedModeId}
+        />
       </div>
     );
   }
 
   if (!routeResult) {
     return (
-      <div className="bg-rose-50 rounded-2xl border border-rose-200 p-6 text-center text-rose-700">
-        <AlertCircle className="w-8 h-8 mx-auto mb-2 text-rose-500" />
-        <h3 className="font-semibold text-base mb-1">تعذر العثور على مسار مباشر</h3>
-        <p className="text-xs text-rose-600">
+      <div className="bg-[#140b12] rounded-2xl border border-rose-500/60 p-6 text-center text-rose-200 shadow-[0_0_20px_rgba(244,63,94,0.3)]">
+        <AlertCircle className="w-8 h-8 mx-auto mb-2 text-rose-400 animate-pulse" />
+        <h3 className="font-bold text-base mb-1 text-white">تعذر العثور على مسار مباشر</h3>
+        <p className="text-xs text-rose-300 font-mono">
           يرجى التحقق من اتصال المحطتين أو مراجعة شبكة الخطوط المحددة.
         </p>
       </div>
@@ -65,7 +97,7 @@ export const ResultCard: React.FC = () => {
         ? `\nالتبديلات: ${transfers.map((t) => `${t.stationName} (${t.direction})`).join('، ')}`
         : '\nمسار مباشر دون تبديل خطوط';
 
-    const text = `رحلة مواصلات مصر:\nمن: ${startStation.name} إلى: ${endStation.name}\nعدد المحطات: ${totalStations}\nسعر التذكرة: ${fare} جنيه\nالوقت التقديري: حوالي ${estimatedMinutes} دقيقة${transferText}`;
+    const text = `رحلة مواصلات مصر الحديثة:\nمن: ${startStation.name} إلى: ${endStation.name}\nعدد المحطات: ${totalStations}\nسعر التذكرة العادية: ${fare} جنيهاً\nالوقت المتوقع: حوالي ${estimatedMinutes} دقيقة${transferText}`;
 
     navigator.clipboard.writeText(text);
     setCopied(true);
@@ -77,97 +109,148 @@ export const ResultCard: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden transition-all">
+    <div className="bg-[#0b101b] rounded-2xl border border-[#00f0ff]/50 shadow-[0_0_25px_rgba(0,240,255,0.25)] overflow-hidden transition-all">
       {/* Top Banner / Summary */}
-      <div className="bg-gradient-to-l from-slate-900 to-slate-800 text-white p-5 sm:p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-gradient-to-l from-[#09111e] via-[#0e192c] to-[#070c16] text-white p-5 sm:p-6 border-b border-[#00f0ff]/30">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
           <div>
-            <div className="flex items-center gap-2 text-xs text-blue-300 font-medium mb-1">
-              <span>تفاصيل مسار الرحلة</span>
+            <div className="flex items-center gap-2 text-xs text-[#00f0ff] font-mono mb-1.5">
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-[#00f0ff] shadow-[0_0_6px_#00f0ff]"></span>
+                ROUTE TELEMETRY
+              </span>
               <span>·</span>
-              <span>تسعيرة رسمية</span>
+              <span className="text-[#38bdf8]">تسعيرة رسمية معتمدة 2026</span>
             </div>
-            <div className="flex items-center gap-2 text-lg sm:text-xl font-bold">
-              <span>{startStation.name}</span>
-              <span className="text-blue-400">←</span>
-              <span>{endStation.name}</span>
+            <div className="flex items-center gap-2 text-lg sm:text-xl font-extrabold text-white">
+              <span className="neon-text-subtle">{startStation.name}</span>
+              <span className="text-[#00f0ff] animate-pulse">➔</span>
+              <span className="neon-text-subtle">{endStation.name}</span>
             </div>
           </div>
 
-          {/* Fare Spotlight */}
-          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-white/10 self-start sm:self-auto">
-            <div className="text-right">
-              <span className="text-[11px] text-slate-300 block font-medium">سعر التذكرة الإجمالي</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl sm:text-3xl font-extrabold text-amber-400 tabular-nums">
-                  {fare}
-                </span>
-                <span className="text-xs text-slate-200 font-medium">جنيه مصري</span>
-              </div>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="self-start sm:self-center inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#091526] hover:bg-[#00f0ff] hover:text-[#060911] text-[#00f0ff] border border-[#00f0ff]/40 text-xs font-mono transition-all shadow-[0_0_8px_rgba(0,240,255,0.2)]"
+          >
+            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+            <span>{copied ? 'تم النسخ!' : 'نسخ المسار'}</span>
+          </button>
+        </div>
+
+        {/* Inside the dynamic result card: The modern train framed by a glowing neon border */}
+        <CyberpunkTrainGraphic modeName={currentMode.name} />
+
+        {/* Side-by-Side: Total Stations ('عدد المحطات') & Standard Ticket Price ('سعر التذكرة العادية') with neon blue glow */}
+        <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[#00f0ff]/30 shadow-[0_1px_10px_rgba(0,240,255,0.15)]">
+          {/* Box 1: عدد المحطات */}
+          <div className="bg-[#070d17] p-3.5 rounded-xl border border-[#00f0ff]/50 shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] flex flex-col justify-between">
+            <span className="text-xs text-[#7dd3fc] font-bold tracking-wide block neon-text-subtle">
+              عدد المحطات
+            </span>
+            <div className="flex items-baseline gap-1.5 mt-1.5">
+              <span className="text-3xl sm:text-4xl font-black text-[#00f0ff] font-mono tabular-nums neon-text-blue">
+                {totalStations}
+              </span>
+              <span className="text-xs text-[#38bdf8] font-bold font-mono">محطة</span>
             </div>
-            <div className="w-10 h-10 rounded-lg bg-amber-400/20 text-amber-300 flex items-center justify-center shrink-0">
-              <Ticket className="w-5 h-5" />
+          </div>
+
+          {/* Box 2: سعر التذكرة العادية */}
+          <div className="bg-[#070d17] p-3.5 rounded-xl border border-[#00f0ff]/50 shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] flex flex-col justify-between">
+            <span className="text-xs text-[#7dd3fc] font-bold tracking-wide block neon-text-subtle">
+              سعر التذكرة العادية
+            </span>
+            <div className="flex items-baseline gap-1.5 mt-1.5">
+              <span className="text-3xl sm:text-4xl font-black text-[#00f0ff] font-mono tabular-nums neon-text-blue">
+                {fare}
+              </span>
+              <span className="text-xs text-[#38bdf8] font-bold">جنيهاً</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Metrics Row */}
-      <div className="grid grid-cols-3 divide-x divide-x-reverse divide-slate-100 border-b border-slate-100 bg-slate-50/70 p-3 sm:p-4 text-center">
-        {/* Metric 1: Total Stations */}
+      {/* Main Central Button: عرض الاشتراكات والفئات الخاصة (Solid Glowing Neon Blue Button) */}
+      <div className="p-4 sm:p-5 bg-[#060a12] border-b border-[#00f0ff]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_15px_rgba(0,240,255,0.1)]">
+        <div className="text-xs text-slate-300">
+          <span className="font-bold block text-sm mb-0.5 text-white neon-text-subtle">
+            اشتراكات الطلاب والفئات الخاصة متوفرة
+          </span>
+          <p className="text-[#38bdf8] text-[11px] font-mono">
+            وفر حتى 85% عبر الاشتراكات الربع سنوية والسنوية المعتمدة.
+          </p>
+        </div>
+
+        {/* Central glowing solid neon blue button */}
+        <button
+          type="button"
+          onClick={() => setIsSubscriptionsModalOpen(true)}
+          className="btn-neon-solid px-5 py-3 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+        >
+          <Sparkles className="w-4 h-4 fill-slate-950" />
+          <span>عرض الاشتراكات والفئات الخاصة</span>
+        </button>
+      </div>
+
+      {/* Metrics Row: Time & Transfers with glowing dividers and badges */}
+      <div className="grid grid-cols-2 divide-x divide-x-reverse divide-[#00f0ff]/20 border-b border-[#00f0ff]/20 bg-[#080d17] p-3 sm:p-4 text-center">
+        {/* Metric: Estimated Time */}
         <div className="px-2">
-          <span className="text-[11px] font-medium text-slate-500 block mb-0.5">عدد المحطات</span>
-          <div className="text-lg sm:text-xl font-bold text-slate-900 tabular-nums">
-            {totalStations} <span className="text-xs font-normal text-slate-500">محطة</span>
+          <span className="text-[11px] font-mono text-[#7dd3fc] block mb-0.5">الوقت المتوقع للرحلة</span>
+          <div className="text-base sm:text-lg font-extrabold text-white tabular-nums flex items-center justify-center gap-1">
+            <Clock className="w-4 h-4 text-[#00f0ff] inline" />
+            <span className="text-[#00f0ff] font-mono">{estimatedMinutes}</span>
+            <span className="text-xs font-normal text-slate-400">دقيقة تقريباً</span>
           </div>
         </div>
 
-        {/* Metric 2: Estimated Time */}
+        {/* Metric: Transfers Count */}
         <div className="px-2">
-          <span className="text-[11px] font-medium text-slate-500 block mb-0.5">الوقت المتوقع</span>
-          <div className="text-lg sm:text-xl font-bold text-slate-900 tabular-nums flex items-center justify-center gap-1">
-            <Clock className="w-4 h-4 text-blue-600 inline" />
-            <span>{estimatedMinutes}</span>
-            <span className="text-xs font-normal text-slate-500">دقيقة</span>
-          </div>
-        </div>
-
-        {/* Metric 3: Transfers Count */}
-        <div className="px-2">
-          <span className="text-[11px] font-medium text-slate-500 block mb-0.5">التبديلات</span>
-          <div className="text-lg sm:text-xl font-bold text-slate-900 tabular-nums">
+          <span className="text-[11px] font-mono text-[#7dd3fc] block mb-0.5">التبديلات بين الخطوط</span>
+          <div className="text-base sm:text-lg font-extrabold tabular-nums">
             {transfers.length === 0 ? (
-              <span className="text-emerald-600 text-sm font-semibold">مباشر (0)</span>
+              <span className="text-[#00f0ff] text-xs sm:text-sm font-bold bg-[#061521] px-2.5 py-0.5 rounded border border-[#00f0ff]/40 shadow-[0_0_8px_rgba(0,240,255,0.3)]">
+                ✓ مسار مباشر (بدون تبديل)
+              </span>
             ) : (
-              <span className="text-amber-600">
-                {transfers.length} <span className="text-xs font-normal text-slate-500">تبديل</span>
+              <span className="text-amber-300 text-xs sm:text-sm font-bold bg-amber-950/40 px-2.5 py-0.5 rounded border border-amber-400/40 shadow-[0_0_8px_rgba(251,191,36,0.2)]">
+                {transfers.length} تبديل خطوط
               </span>
             )}
           </div>
         </div>
       </div>
 
-      <div className="p-5 sm:p-6 space-y-5">
-        {/* Applied Fare Bracket Pill & Disclaimers */}
+      <div className="p-5 sm:p-6 space-y-5 bg-[#090e18]">
+        {/* Applied Fare Bracket Pill & Disclaimers with glowing line and badge */}
         {appliedBracket && (
-          <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-blue-50/70 border border-blue-100 text-xs">
-            <div className="flex items-center gap-2 text-blue-900">
-              <span className="w-2 h-2 rounded-full bg-blue-600"></span>
-              <span className="font-semibold">الشريحة المطبقة:</span>
-              <span>{appliedBracket.label}</span>
-              <span className="text-blue-700 font-bold tabular-nums">({appliedBracket.price} ج.م)</span>
+          <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-[#060a13] border border-[#00f0ff]/30 text-xs shadow-[inset_0_0_8px_rgba(0,240,255,0.1)]">
+            <div className="flex items-center gap-2 text-slate-200">
+              <span className="w-2 h-2 rounded-full bg-[#00f0ff] shadow-[0_0_6px_#00f0ff]"></span>
+              <span className="text-[#7dd3fc]">الشريحة المطبقة:</span>
+              <span className="text-white font-bold">{appliedBracket.label}</span>
+              <span className="text-[#00f0ff] font-mono font-black tabular-nums">({appliedBracket.price} ج.م)</span>
             </div>
-            <div className="text-slate-500 text-[11px]">
-              * خصم 50% لكبار السن · ذوي الهمم 50 قرش
-            </div>
+            <button
+              type="button"
+              onClick={() => setIsSubscriptionsModalOpen(true)}
+              className="text-[#00f0ff] hover:text-white text-[11px] font-bold underline font-mono cursor-pointer"
+            >
+              DETAILS // تفاصيل الخصومات ➔
+            </button>
           </div>
         )}
 
+        {/* Section divider as glowing neon blue line */}
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#00f0ff]/50 to-transparent shadow-[0_0_8px_#00f0ff]"></div>
+
         {/* Prominent Transfer Notice (محطة التبديل التبادلية بشكل بارز) */}
-        {transfers.length > 0 ? (
+        {transfers.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5">
-              <GitBranch className="w-4 h-4 text-purple-600" />
+            <h4 className="text-xs font-bold text-[#00f0ff] uppercase tracking-wider flex items-center gap-1.5 font-mono">
+              <GitBranch className="w-4 h-4 text-[#00f0ff]" />
               محطات التبديل المطلوبة في المسار ({transfers.length}):
             </h4>
 
@@ -178,210 +261,131 @@ export const ResultCard: React.FC = () => {
               return (
                 <div
                   key={idx}
-                  className="p-4 rounded-xl bg-purple-50/80 border-2 border-purple-200 text-purple-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs"
+                  className="p-4 rounded-xl bg-[#070f1e] border-2 border-[#00f0ff]/60 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_15px_rgba(0,240,255,0.25)]"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+                    <div className="w-8 h-8 rounded-lg bg-[#00f0ff] text-[#060911] flex items-center justify-center font-black text-sm shrink-0 mt-0.5 shadow-[0_0_10px_#00f0ff]">
                       {idx + 1}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-purple-700 font-semibold">محطة تبادلية:</span>
-                        <span className="text-base font-extrabold text-purple-900 bg-white px-2.5 py-0.5 rounded-md border border-purple-300 shadow-2xs">
+                        <span className="text-xs text-[#7dd3fc] font-mono">محطة تبادلية:</span>
+                        <span className="text-base font-black text-white bg-[#091b30] px-2.5 py-0.5 rounded-md border border-[#00f0ff] shadow-[0_0_8px_rgba(0,240,255,0.4)]">
                           محطة {tr.stationName}
                         </span>
                       </div>
-                      <p className="text-xs text-purple-800 mt-1 font-medium">
-                        انزل في محطة <strong className="font-bold underline">{tr.stationName}</strong>، ثم انتقل إلى رصيف{' '}
-                        <strong className="font-bold">{toLine?.name || tr.direction}</strong>
+                      <p className="text-xs text-slate-300 mt-1 font-medium">
+                        انزل في محطة <strong className="font-bold text-[#00f0ff] underline">{tr.stationName}</strong>، ثم انتقل إلى رصيف{' '}
+                        <strong className="font-bold text-white">{toLine?.name || tr.direction}</strong>
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 text-xs font-semibold self-end sm:self-auto bg-white/80 px-2.5 py-1.5 rounded-lg border border-purple-200 text-purple-800">
-                    <span
-                      className="w-2.5 h-2.5 rounded-full"
-                      style={{ backgroundColor: fromLine?.color || '#9333ea' }}
-                    ></span>
+                  <div className="flex items-center gap-1.5 text-xs font-semibold self-end sm:self-auto bg-[#060a13] px-2.5 py-1.5 rounded-lg border border-[#00f0ff]/40 text-[#7dd3fc]">
                     <span>{fromLine?.name.split('(')[0] || 'الخط الحالي'}</span>
-                    <span className="text-purple-400">➔</span>
-                    <span
-                      className="w-2.5 h-2.5 rounded-full"
-                      style={{ backgroundColor: toLine?.color || '#0284c7' }}
-                    ></span>
-                    <span>{toLine?.name.split('(')[0] || 'الخط الجديد'}</span>
+                    <span className="text-[#00f0ff]">➔</span>
+                    <span className="text-white font-bold">{toLine?.name.split('(')[0] || 'الخط الجديد'}</span>
                   </div>
                 </div>
               );
             })}
           </div>
-        ) : (
-          <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2.5">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span className="font-medium">
-              رحلة مباشرة على نفس الخط دون الحاجة لتبديل قطارات.
-            </span>
-          </div>
         )}
 
-        {/* Visual Step-by-Step Route Timeline */}
-        <div className="space-y-3 pt-2">
-          <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-blue-600" />
-              تسلسل مسار المحطات ({path.length} محطة):
-            </h4>
-            {path.length > 5 && (
-              <button
-                type="button"
-                onClick={() => setShowFullTimeline(!showFullTimeline)}
-                className="text-xs text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1"
-              >
-                {showFullTimeline ? (
-                  <>
-                    <span>إخفاء المحطات الوسيطة</span>
-                    <ChevronUp className="w-3.5 h-3.5" />
-                  </>
-                ) : (
-                  <>
-                    <span>عرض كافة المحطات بالكامل</span>
-                    <ChevronDown className="w-3.5 h-3.5" />
-                  </>
-                )}
-              </button>
-            )}
-          </div>
+        {/* Section divider as glowing neon blue line */}
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#00f0ff]/50 to-transparent shadow-[0_0_8px_#00f0ff]"></div>
 
-          <div className="relative pl-2 pr-2 py-2">
-            {/* Timeline stations */}
-            <div className="space-y-2">
+        {/* Interactive Station Point Indicators (Timeline Path) */}
+        <div>
+          <button
+            type="button"
+            onClick={() => setShowFullTimeline(!showFullTimeline)}
+            className="w-full flex items-center justify-between text-xs font-bold text-[#7dd3fc] hover:text-[#00f0ff] p-2.5 rounded-lg bg-[#060a13] border border-[#00f0ff]/30 transition-all font-mono"
+          >
+            <span className="flex items-center gap-2">
+              <MapPin className="w-3.5 h-3.5 text-[#00f0ff]" />
+              STATION TIMELINE // مسار المحطات المقطوعة ({path.length} محطة)
+            </span>
+            {showFullTimeline ? (
+              <ChevronUp className="w-4 h-4 text-[#00f0ff]" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-[#00f0ff]" />
+            )}
+          </button>
+
+          {showFullTimeline && (
+            <div className="mt-3 p-4 bg-[#050811] rounded-xl border border-[#00f0ff]/30 max-h-72 overflow-y-auto space-y-3 font-mono">
               {path.map((step, idx) => {
-                const line = getLineById(step.lineId);
                 const isFirst = idx === 0;
                 const isLast = idx === path.length - 1;
-                const isTransfer = step.isTransfer;
-
-                // If not showing full timeline and we have many stations, collapse middle ones
-                if (!showFullTimeline && path.length > 7) {
-                  if (idx > 2 && idx < path.length - 3 && !isTransfer) {
-                    if (idx === 3) {
-                      return (
-                        <div
-                          key={`collapsed_${idx}`}
-                          onClick={() => setShowFullTimeline(true)}
-                          className="py-2 px-3 my-1 rounded-lg bg-slate-100/80 border border-dashed border-slate-300 text-slate-500 text-xs text-center cursor-pointer hover:bg-slate-200/70 transition-colors"
-                        >
-                          ... يمر بـ {path.length - 6} محطة وسيطة أخرى (اضغط للعرض الكامل) ...
-                        </div>
-                      );
-                    }
-                    return null;
-                  }
-                }
+                const isTransfer = step.station.isInterchange;
 
                 return (
-                  <div
-                    key={`${step.station.id}_${idx}`}
-                    className={`flex items-start gap-3 p-2.5 rounded-xl transition-all ${
-                      isFirst
-                        ? 'bg-emerald-50/70 border border-emerald-200'
-                        : isLast
-                        ? 'bg-rose-50/70 border border-rose-200'
-                        : isTransfer
-                        ? 'bg-purple-50/90 border border-purple-200'
-                        : 'bg-white border border-slate-100 hover:border-slate-200'
-                    }`}
-                  >
-                    {/* Node Dot / Indicator */}
-                    <div className="relative flex flex-col items-center shrink-0 mt-0.5">
-                      <div
-                        className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                          isFirst
-                            ? 'bg-emerald-600 text-white ring-4 ring-emerald-100'
-                            : isLast
-                            ? 'bg-rose-600 text-white ring-4 ring-rose-100'
-                            : isTransfer
-                            ? 'bg-purple-600 text-white ring-4 ring-purple-100'
-                            : 'bg-slate-300 text-slate-700'
-                        }`}
-                      >
-                        {idx + 1}
-                      </div>
+                  <div key={step.station.id} className="flex items-start gap-3 relative group">
+                    {/* Vertical connecting line indicator */}
+                    {!isLast && (
+                      <div className="absolute right-[11px] top-6 w-0.5 h-6 bg-[#00f0ff]/40 group-hover:bg-[#00f0ff] transition-colors shadow-[0_0_4px_#00f0ff]"></div>
+                    )}
+
+                    {/* Station point node indicator with neon glow */}
+                    <div
+                      className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold z-10 transition-all ${
+                        isFirst
+                          ? 'bg-[#00f0ff] text-[#060911] shadow-[0_0_10px_#00f0ff]'
+                          : isLast
+                          ? 'bg-[#38bdf8] text-[#060911] shadow-[0_0_10px_#38bdf8]'
+                          : isTransfer
+                          ? 'bg-[#a855f7] text-white shadow-[0_0_8px_#a855f7]'
+                          : 'bg-[#091524] border border-[#00f0ff]/50 text-[#7dd3fc]'
+                      }`}
+                    >
+                      {idx + 1}
                     </div>
 
-                    {/* Station Name & Meta */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
+                    <div className="flex-1 flex items-center justify-between">
+                      <div>
                         <span
-                          className={`text-sm font-semibold truncate ${
-                            isFirst || isLast || isTransfer ? 'text-slate-900 font-bold' : 'text-slate-700'
+                          className={`text-xs font-bold ${
+                            isFirst || isLast
+                              ? 'text-white neon-text-subtle'
+                              : isTransfer
+                              ? 'text-purple-300'
+                              : 'text-slate-300'
                           }`}
                         >
                           {step.station.name}
                         </span>
-
-                        <span
-                          className="text-[10px] px-2 py-0.5 rounded font-medium shrink-0"
-                          style={{
-                            backgroundColor: `${line?.color}15` || '#f1f5f9',
-                            color: line?.color || '#475569',
-                          }}
-                        >
-                          {line?.name.split('(')[0] || 'الخط'}
-                        </span>
+                        {isFirst && (
+                          <span className="mr-2 text-[10px] text-[#00f0ff] bg-[#071322] px-1.5 py-0.5 rounded border border-[#00f0ff]/30">
+                            محطة الركوب
+                          </span>
+                        )}
+                        {isLast && (
+                          <span className="mr-2 text-[10px] text-[#38bdf8] bg-[#071322] px-1.5 py-0.5 rounded border border-[#38bdf8]/30">
+                            محطة الوصول
+                          </span>
+                        )}
+                        {isTransfer && !isFirst && !isLast && (
+                          <span className="mr-2 text-[10px] text-purple-300 bg-purple-950/60 px-1.5 py-0.5 rounded border border-purple-500/40">
+                            محطة تبادلية
+                          </span>
+                        )}
                       </div>
-
-                      {/* Direction hint or transfer badge */}
-                      {isFirst && step.direction && (
-                        <p className="text-[11px] text-emerald-700 font-medium mt-0.5">
-                          اركب القطار {step.direction}
-                        </p>
-                      )}
-
-                      {isTransfer && (
-                        <p className="text-[11px] text-purple-700 font-semibold mt-0.5">
-                          ⚡ محطة تبادل الخطوط
-                        </p>
-                      )}
-
-                      {isLast && (
-                        <p className="text-[11px] text-rose-700 font-medium mt-0.5">
-                          🏁 محطة الوصول والنزول النهائية
-                        </p>
-                      )}
                     </div>
                   </div>
                 );
               })}
             </div>
-          </div>
-        </div>
-
-        {/* Action bar: Copy & Share */}
-        <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-          <button
-            type="button"
-            onClick={handleCopy}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors active:scale-95"
-          >
-            {copied ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="text-emerald-700">تم نسخ تفاصيل الرحلة!</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-3.5 h-3.5 text-slate-500" />
-                <span>نسخ ملخص الرحلة</span>
-              </>
-            )}
-          </button>
-
-          <span className="text-[11px] text-slate-400">
-            تحديث تسعيرة الهيئة القومية للأنفاق 2026
-          </span>
+          )}
         </div>
       </div>
+
+      {/* Subscriptions Modal */}
+      <SubscriptionsModal
+        isOpen={isSubscriptionsModalOpen}
+        onClose={() => setIsSubscriptionsModalOpen(false)}
+        initialModeId={selectedModeId}
+      />
     </div>
   );
 };

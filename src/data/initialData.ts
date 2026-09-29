@@ -324,21 +324,21 @@ export const INITIAL_STATIONS: Station[] = [
 ];
 
 export const INITIAL_FARE_BRACKETS: FareBracket[] = [
-  // Metro Brackets (التسعيرة الرسمية المحدثة لمترو القاهرة)
+  // 1. مترو القاهرة (Cairo Metro)
   {
     id: 'metro_tier_1',
     modeId: 'metro',
     minStations: 1,
     maxStations: 9,
-    price: 8,
-    label: 'من 1 إلى 9 محطات',
+    price: 10,
+    label: 'حتى 9 محطات',
   },
   {
     id: 'metro_tier_2',
     modeId: 'metro',
     minStations: 10,
     maxStations: 16,
-    price: 10,
+    price: 12,
     label: 'من 10 إلى 16 محطة',
   },
   {
@@ -355,10 +355,102 @@ export const INITIAL_FARE_BRACKETS: FareBracket[] = [
     minStations: 24,
     maxStations: 999,
     price: 20,
-    label: 'أكثر من 23 محطة',
+    label: 'أكثر من 23 محطة (حتى 39 محطة)',
   },
 
-  // High Speed Train Brackets
+  // 2. المونوريل (Monorail)
+  {
+    id: 'monorail_tier_1',
+    modeId: 'monorail',
+    minStations: 1,
+    maxStations: 5,
+    price: 20,
+    label: 'حتى 5 محطات (منطقة واحدة)',
+  },
+  {
+    id: 'monorail_tier_2',
+    modeId: 'monorail',
+    minStations: 6,
+    maxStations: 10,
+    price: 40,
+    label: 'حتى 10 محطات (منطقتان)',
+  },
+  {
+    id: 'monorail_tier_3',
+    modeId: 'monorail',
+    minStations: 11,
+    maxStations: 15,
+    price: 55,
+    label: 'حتى 15 محطة (3 مناطق)',
+  },
+  {
+    id: 'monorail_tier_4',
+    modeId: 'monorail',
+    minStations: 16,
+    maxStations: 999,
+    price: 80,
+    label: 'أكثر من 15 محطة / الخط بالكامل (4 مناطق)',
+  },
+
+  // 3. الأتوبيس الترددي BRT (مسار الطريق الدائري)
+  {
+    id: 'brt_tier_1',
+    modeId: 'brt',
+    minStations: 1,
+    maxStations: 4,
+    price: 5,
+    label: 'حتى 4 محطات',
+  },
+  {
+    id: 'brt_tier_2',
+    modeId: 'brt',
+    minStations: 5,
+    maxStations: 10,
+    price: 10,
+    label: 'حتى 10 محطات',
+  },
+  {
+    id: 'brt_tier_3',
+    modeId: 'brt',
+    minStations: 11,
+    maxStations: 14,
+    price: 15,
+    label: 'حتى 14 محطة',
+  },
+  {
+    id: 'brt_tier_4',
+    modeId: 'brt',
+    minStations: 15,
+    maxStations: 18,
+    price: 20,
+    label: 'حتى 18 محطة',
+  },
+  {
+    id: 'brt_tier_5',
+    modeId: 'brt',
+    minStations: 19,
+    maxStations: 22,
+    price: 25,
+    label: 'حتى 22 محطة',
+  },
+  {
+    id: 'brt_tier_6',
+    modeId: 'brt',
+    minStations: 23,
+    maxStations: 26,
+    price: 30,
+    label: 'حتى 26 محطة',
+  },
+  {
+    id: 'brt_tier_7',
+    modeId: 'brt',
+    minStations: 27,
+    maxStations: 999,
+    price: 35,
+    label: 'حتى 30 محطة فما فوق (الرحلة الكاملة)',
+  },
+
+  // 4. القطار الكهربائي السريع (High Speed Train)
   {
     id: 'hst_tier_1',
     modeId: 'lrt_train',
@@ -390,73 +482,5 @@ export const INITIAL_FARE_BRACKETS: FareBracket[] = [
     maxStations: 999,
     price: 100,
     label: 'أكثر من 11 محطة',
-  },
-
-  // Monorail Brackets
-  {
-    id: 'monorail_tier_1',
-    modeId: 'monorail',
-    minStations: 1,
-    maxStations: 5,
-    price: 15,
-    label: 'من 1 إلى 5 محطات',
-  },
-  {
-    id: 'monorail_tier_2',
-    modeId: 'monorail',
-    minStations: 6,
-    maxStations: 12,
-    price: 25,
-    label: 'من 6 إلى 12 محطة',
-  },
-  {
-    id: 'monorail_tier_3',
-    modeId: 'monorail',
-    minStations: 13,
-    maxStations: 18,
-    price: 35,
-    label: 'من 13 إلى 18 محطة',
-  },
-  {
-    id: 'monorail_tier_4',
-    modeId: 'monorail',
-    minStations: 19,
-    maxStations: 999,
-    price: 45,
-    label: 'أكثر من 18 محطة',
-  },
-
-  // BRT Brackets (مسار الطريق الدائري 48 محطة)
-  {
-    id: 'brt_tier_1',
-    modeId: 'brt',
-    minStations: 1,
-    maxStations: 4,
-    price: 5,
-    label: 'من 1 إلى 4 محطات',
-  },
-  {
-    id: 'brt_tier_2',
-    modeId: 'brt',
-    minStations: 5,
-    maxStations: 9,
-    price: 10,
-    label: 'من 5 إلى 9 محطات',
-  },
-  {
-    id: 'brt_tier_3',
-    modeId: 'brt',
-    minStations: 10,
-    maxStations: 16,
-    price: 15,
-    label: 'من 10 إلى 16 محطة',
-  },
-  {
-    id: 'brt_tier_4',
-    modeId: 'brt',
-    minStations: 17,
-    maxStations: 999,
-    price: 20,
-    label: 'أكثر من 16 محطة',
   },
 ];

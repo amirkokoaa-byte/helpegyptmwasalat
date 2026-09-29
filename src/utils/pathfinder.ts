@@ -1,4 +1,5 @@
 import { Station, TransitLine, FareBracket, RouteResult, RouteStep } from '../types/transit';
+import { calculateDynamicPrice } from './pricing';
 
 interface GraphEdge {
   toStationId: string;
@@ -313,24 +314,28 @@ export function findShortestPath(
   // Time estimate: ~2.2 minutes per station + 5 minutes per transfer
   const estimatedMinutes = Math.round(totalStations * 2.2 + transfers.length * 5);
 
-  // Fare calculation based on mode fare brackets
+  // Fare calculation based on dynamic price calculation function
   const modeBrackets = fareBrackets.filter((b) => b.modeId === startStation.modeId);
-  const sortedBrackets = [...modeBrackets].sort((a, b) => a.minStations - b.minStations);
+  const dynamicPrice = calculateDynamicPrice(startStation.modeId, totalStations, modeBrackets);
+  const fare = dynamicPrice.price;
 
   let appliedBracket: FareBracket | null = null;
-  for (const b of sortedBrackets) {
-    if (totalStations >= b.minStations && totalStations <= b.maxStations) {
-      appliedBracket = b;
-      break;
-    }
-  }
+  const foundBracket = modeBrackets.find(
+    (b) => totalStations >= b.minStations && totalStations <= b.maxStations
+  );
 
-  // Fallback if beyond highest bracket
-  if (!appliedBracket && sortedBrackets.length > 0) {
-    appliedBracket = sortedBrackets[sortedBrackets.length - 1];
+  if (foundBracket) {
+    appliedBracket = foundBracket;
+  } else {
+    appliedBracket = {
+      id: `dynamic_tier_${dynamicPrice.tierIndex}`,
+      modeId: startStation.modeId,
+      minStations: 1,
+      maxStations: totalStations,
+      price: dynamicPrice.price,
+      label: dynamicPrice.label,
+    };
   }
-
-  const fare = appliedBracket ? appliedBracket.price : 10;
 
   return {
     startStation,
