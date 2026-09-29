@@ -49,8 +49,8 @@ export const NetworkGraphView: React.FC = () => {
       x: 780,
       y: 220,
       type: 'super_hub',
-      lines: ['metro_line_3', 'lrt_line_1', 'brt_ring_road'],
-      description: 'أكبر محطة تبادلية في الشرق الأوسط (تجمع الخط الثالث للمترو، القطار الخفيف LRT، والأتوبيس الترددي BRT)',
+      lines: ['metro_line_3', 'hst_line', 'brt_ring_road'],
+      description: 'أكبر محطة تبادلية في الشرق الأوسط (تجمع الخط الثالث للمترو، القطار السريع، والأتوبيس الترددي BRT)',
       transferTimeMin: 4,
     },
     {
@@ -119,8 +119,8 @@ export const NetworkGraphView: React.FC = () => {
       x: 940,
       y: 340,
       type: 'major_interchange',
-      lines: ['lrt_line_1', 'monorail_east'],
-      description: 'محطة التبادل الكبرى في قلب العاصمة الإدارية بين مونوريل العاصمة والقطار الكهربائي الخفيف (LRT)',
+      lines: ['hst_line', 'monorail_east'],
+      description: 'محطة التبادل الكبرى في قلب العاصمة الإدارية بين مونوريل العاصمة والقطار السريع',
       transferTimeMin: 4,
     },
     {
@@ -129,7 +129,7 @@ export const NetworkGraphView: React.FC = () => {
       x: 320,
       y: 320,
       type: 'major_interchange',
-      lines: ['metro_line_3', 'monorail_west'],
+      lines: ['metro_line_3', 'monorail_east'],
       description: 'عقدة ربط تفريعة الخط الثالث بمونوريل غرب النيل المتجه إلى مدينة 6 أكتوبر',
       transferTimeMin: 4,
     },
@@ -185,12 +185,12 @@ export const NetworkGraphView: React.FC = () => {
     },
     {
       id: 'october_ind',
-      name: 'المنطقة الصناعية (6 أكتوبر)',
+      name: 'العلمين (طرف القطار السريع)',
       x: 120,
       y: 430,
       type: 'terminal',
-      lines: ['monorail_west'],
-      description: 'محطة وصول مونوريل غرب النيل داخل المنطقة الصناعية بمدينة السادس من أكتوبر',
+      lines: ['hst_line'],
+      description: 'محطة وصول القطار الكهربائي السريع في الساحل الشمالي والعلمين',
       transferTimeMin: 0,
     },
     {
@@ -207,11 +207,11 @@ export const NetworkGraphView: React.FC = () => {
 
   // Visual Links / Edges between nodes
   const links: GraphLink[] = [
-    // Line 1: Red (حلوان -> السادات -> ناصر -> الشهداء -> المرج)
-    { from: 'helwan', to: 'sadat', lineId: 'metro_line_1', color: '#dc2626', name: 'الخط الأول (حلوان - السادات)' },
-    { from: 'sadat', to: 'nasser', lineId: 'metro_line_1', color: '#dc2626', name: 'الخط الأول (السادات - ناصر)' },
-    { from: 'nasser', to: 'shohadaa', lineId: 'metro_line_1', color: '#dc2626', name: 'الخط الأول (ناصر - الشهداء)' },
-    { from: 'shohadaa', to: 'marg', lineId: 'metro_line_1', color: '#dc2626', name: 'الخط الأول (الشهداء - المرج)' },
+    // Line 1: Red (المرج -> الشهداء -> ناصر -> السادات -> حلوان)
+    { from: 'marg', to: 'shohadaa', lineId: 'metro_line_1', color: '#dc2626', name: 'الخط الأول (المرج - الشهداء)' },
+    { from: 'shohadaa', to: 'nasser', lineId: 'metro_line_1', color: '#dc2626', name: 'الخط الأول (الشهداء - ناصر)' },
+    { from: 'nasser', to: 'sadat', lineId: 'metro_line_1', color: '#dc2626', name: 'الخط الأول (ناصر - السادات)' },
+    { from: 'sadat', to: 'helwan', lineId: 'metro_line_1', color: '#dc2626', name: 'الخط الأول (السادات - حلوان)' },
 
     // Line 2: Orange (شبرا -> الشهداء -> العتبة -> السادات -> جامعة القاهرة -> المنيب)
     { from: 'shoubra', to: 'shohadaa', lineId: 'metro_line_2', color: '#ea580c', name: 'الخط الثاني (شبرا - الشهداء)' },
@@ -228,15 +228,12 @@ export const NetworkGraphView: React.FC = () => {
     { from: 'nasser', to: 'wadi_nile', lineId: 'metro_line_3', color: '#059669', name: 'الخط الثالث (ناصر - وادي النيل)' },
     { from: 'wadi_nile', to: 'cairo_univ', lineId: 'metro_line_3', color: '#059669', name: 'الخط الثالث (وادي النيل - جامعة القاهرة)' },
 
-    // LRT: Cyan / Blue (عدلي منصور -> مدينة الفنون والثقافة بالعاصمة)
-    { from: 'adly_mansour', to: 'arts_culture', lineId: 'lrt_line_1', color: '#0284c7', name: 'القطار الكهربائي الخفيف (LRT)' },
+    // High Speed Train: Emerald / Green (العين السخنة -> مدينة الفنون والثقافة بالعاصمة)
+    { from: 'adly_mansour', to: 'arts_culture', lineId: 'hst_line', color: '#16a34a', name: 'القطار الكهربائي السريع' },
 
     // Monorail East: Purple (الاستاد -> مدينة الفنون -> مدينة العدالة)
     { from: 'stadium', to: 'arts_culture', lineId: 'monorail_east', color: '#7c3aed', name: 'مونوريل شرق النيل' },
     { from: 'arts_culture', to: 'capital_justice', lineId: 'monorail_east', color: '#7c3aed', name: 'مونوريل العاصمة' },
-
-    // Monorail West: Purple (وادي النيل -> 6 أكتوبر)
-    { from: 'wadi_nile', to: 'october_ind', lineId: 'monorail_west', color: '#9333ea', name: 'مونوريل غرب النيل (6 أكتوبر)' },
 
     // BRT Ring Road: Amber (عدلي منصور -> المنيب)
     { from: 'adly_mansour', to: 'moneeb', lineId: 'brt_ring_road', color: '#d97706', name: 'مسار الأتوبيس الترددي BRT (الدائري)', dashed: true },
@@ -245,8 +242,16 @@ export const NetworkGraphView: React.FC = () => {
   const getLineDetails = (lineId: string) => lines.find((l) => l.id === lineId);
 
   const handleUseStationInPlanner = (hub: HubNode, asStart: boolean) => {
-    // Find matching station in context
-    const matchingStation = stations.find((s) => s.name.includes(hub.name.split('(')[0].trim()));
+    // Find matching station in context by cleaning name
+    const rawClean = hub.name.replace(/محطة\s+/, '').split('(')[0].trim();
+    const normalize = (s: string) => s.replace(/[إأآا]/g, 'ا').trim();
+    const normClean = normalize(rawClean);
+
+    const matchingStation = stations.find((s) => {
+      const sNorm = normalize(s.name);
+      return sNorm === normClean || sNorm.includes(normClean) || normClean.includes(sNorm);
+    });
+
     if (matchingStation) {
       setSelectedModeId(matchingStation.modeId);
       if (asStart) {

@@ -52,8 +52,8 @@ interface TransitContextType {
   isDataCustomized: boolean;
 }
 
-const STORAGE_KEY_STATIONS = 'egypt_transit_stations_v1';
-const STORAGE_KEY_FARES = 'egypt_transit_fares_v1';
+const STORAGE_KEY_STATIONS = 'egypt_transit_stations_v2';
+const STORAGE_KEY_FARES = 'egypt_transit_fares_v2';
 
 const TransitContext = createContext<TransitContextType | undefined>(undefined);
 
@@ -103,7 +103,7 @@ export const TransitProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Planner selections
   const [selectedModeId, setSelectedModeIdState] = useState<TransportModeId>('metro');
-  const [startStationId, setStartStationId] = useState<string>('m1_19'); // Default: Sadat
+  const [startStationId, setStartStationId] = useState<string>('m1_17'); // Default: Sadat
   const [endStationId, setEndStationId] = useState<string>('m2_08'); // Default: Shohadaa
 
   // Admin states

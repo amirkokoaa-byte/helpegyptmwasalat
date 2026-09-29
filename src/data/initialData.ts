@@ -1,45 +1,127 @@
 import { TransportMode, TransitLine, Station, FareBracket } from '../types/transit';
 
+/**
+ * قاعدة البيانات الرسمية لوسائل المواصلات الحديثة في مصر
+ * مطابقة تماماً للمحطات والترتيب الحقيقي المعتمد
+ */
+export const transportationData = {
+  highSpeedTrain: {
+    id: "high_speed_train",
+    name: "القطار الكهربائي السريع",
+    stations: [
+      "العين السخنة", "العاصمة الإدارية الجديدة", "15 مايو", "محمد نجيب", 
+      "جنوب الجيزة", "حدائق أكتوبر", "6 أكتوبر", "مدينة السادات", 
+      "وادي النطرون", "النوبارية", "برج العرب", "الإسكندرية", 
+      "العامرية", "الحمام", "العلمين"
+    ]
+  },
+  monorail: {
+    id: "monorail_east",
+    name: "مونوريل شرق النيل",
+    stations: [
+      "الإستاد", "هشام بركات", "نوري خطاب", "الحي السابع", "ذاكر حسين", 
+      "جيهان السادات", "المشير طنطاوي", "وان ناينتي", "مستشفى الجوي", 
+      "النرجس", "المستثمرين", "الأندلس", "النافورة", "بيت الوطن", 
+      "مسجد الفتاح العليم", "R1", "R2", "R3", "مدينة الفنون والثقافة", 
+      "حي الوزارات", "مسجد مصر", "مدينة العدالة"
+    ]
+  },
+  metro: {
+    id: "cairo_metro",
+    name: "مترو القاهرة",
+    lines: {
+      line1: {
+        name: "الخط الأول (المرج - حلوان)",
+        stations: [
+          "المرج الجديدة", "المرج", "عزبة النخل", "عين شمس", "المطرية", 
+          "حلمية الزيتون", "حدائق الزيتون", "سراي القبة", "حمامات القبة", 
+          "كوبري القبة", "منشية الصدر", "الدمرداش", "غمرة", "الشهداء", 
+          "عرابي", "ناصر", "السادات", "سعد زغلول", "السيدة زينب", 
+          "الملك الصالح", "مار جرجس", "الزهراء", "دار السلام", "حدائق المعادي", 
+          "المعادي", "ثكنات المعادي", "طرة البلد", "كوتسيكا", "طرة الأسمنت", 
+          "المعصرة", "حدائق حلوان", "وادي حوف", "جامعة حلوان", "عين حلوان", "حلوان"
+        ]
+      },
+      line2: {
+        name: "الخط الثاني (شبرا الخيمة - المنيب)",
+        stations: [
+          "شبرا الخيمة", "كلية الزراعة", "المظلات", "الخلفاوي", "سانت تريزا", 
+          "روض الفرج", "مسرة", "الشهداء", "العتبة", "محمد نجيب", "السادات", 
+          "الأوبرا", "البحوث", "الدقي", "جامعة القاهرة", "فيصل", "الجيزة", 
+          "أم المصريين", "ساقية مكي", "المنيب"
+        ]
+      },
+      line3: {
+        name: "الخط الثالث (عدلي منصور - الكيت كات / تفرعات)",
+        stations: [
+          "عدلي منصور", "الهايكستب", "عمر بن الخطاب", "قباء", "هشام بركات", 
+          "النزهة", "نادي الشمس", "ألف مسكن", "هليوبوليس", "هارون", "الأهرام", 
+          "كلية البنات", "الاستاد", "المعرض", "العباسية", "عبده باشا", "الجيش", 
+          "باب الشعرية", "العتبة", "ناصر", "ماسبيرو", "صفاء حجازي", "الكيت كات",
+          "السودان", "إمبابة", "البوهي", "القومية", "الدائري", "محور روض الفرج",
+          "التوفيقية", "وادي النيل", "جامعة الدول", "بولاق الدكرور", "جامعة القاهرة"
+        ]
+      }
+    }
+  },
+  brt: {
+    id: "brt_bus",
+    name: "الأتوبيس الترددي (BRT)",
+    stations: [
+      "إسكندرية الزراعي", "العقيد أحمد عبدالرحيم (الشرقاوية)", "شبرا بنها", "بهتيم", 
+      "مسطرد", "الخصوص", "المرج", "القلج", "مؤسسة الزكاة", "الفريق إبراهيم عرابي", 
+      "السلام", "عدلي منصور", "طريق السويس", "أكاديمية الشرطة", "المشير طنطاوي", 
+      "الجولف", "طريق السخنة", "النساجون الشرقيون", "كارفور المعادي", "المقطم", 
+      "الأوتوستراد", "شارع الجزائر", "الإمامين", "الزهراء", "البحر الأعظم", 
+      "العمرانية", "الطالبية", "المريوطية", "المنصورية", "صن كابيتال (تقاطع الفيوم)", 
+      "مدخل أكتوبر", "إسكندرية الصحراوي (المتحف المصري الكبير)", "ترسا", "الهرم", 
+      "الملك فيصل", "مسجد المدينة", "منشية البكاري", "صفط اللبن", "زنين", 
+      "المعتمدية", "محور 26 يوليو", "البراجيل", "أرض اللواء", "محور أحمد عرابي", 
+      "إمبابة", "تحيا مصر", "الوراق", "باسوس"
+    ]
+  }
+};
+
 export const INITIAL_TRANSPORT_MODES: TransportMode[] = [
   {
     id: 'metro',
     name: 'مترو أنفاق القاهرة',
     subtitle: 'الخط الأول والثاني والثالث',
     badge: 'الشبكة الأوسع',
-    color: '#0284c7', // Sky / Cyan / Blue
+    color: '#0284c7',
     accentBg: 'bg-sky-50 text-sky-800 border-sky-200',
     iconName: 'Train',
     description: 'شريان العاصمة الذي ينقل ملايين الركاب يومياً عبر 3 خطوط رئيسية ومحطات تبادلية استراتيجية.',
   },
   {
     id: 'lrt_train',
-    name: 'القطار الكهربائي الخفيف (LRT) والسريع',
-    subtitle: 'عدلي منصور - العاصمة الإدارية - العاشر من رمضان',
-    badge: 'كهربائي سريع',
-    color: '#10b981', // Emerald green
+    name: 'القطار الكهربائي السريع',
+    subtitle: 'العين السخنة - العاصمة - الإسكندرية - العلمين',
+    badge: 'فائق السرعة',
+    color: '#10b981',
     accentBg: 'bg-emerald-50 text-emerald-800 border-emerald-200',
     iconName: 'Zap',
-    description: 'قطار عصري فائق الراحة يربط القاهرة بمدن شرق العاصمة ومدن المجتمعات العمرانية الجديدة.',
+    description: 'شبكة القطار الكهربائي السريع لربط البحر الأحمر بالبحر المتوسط من السخنة إلى العلمين ومطروح.',
   },
   {
     id: 'monorail',
-    name: 'المونوريل (شرق وغرب النيل)',
-    subtitle: 'العاصمة الإدارية & 6 أكتوبر',
+    name: 'مونوريل شرق النيل',
+    subtitle: 'الإستاد - القاهرة الجديدة - العاصمة الإدارية',
     badge: 'معلق فائق الحداثة',
-    color: '#8b5cf6', // Purple/Violet
+    color: '#8b5cf6',
     accentBg: 'bg-purple-50 text-purple-800 border-purple-200',
     iconName: 'Compass',
-    description: 'مشروع النقل المعلق الأطول في العالم دون سائق، يربط شرق القاهرة بالعاصمة وغرب القاهرة بـ 6 أكتوبر.',
+    description: 'مونوريل شرق النيل فائق التطور يربط مدينة نصر بالقاهرة الجديدة ومحطات العاصمة الإدارية الجديدة.',
   },
   {
     id: 'brt',
-    name: 'الأتوبيس الترددي السريع (BRT)',
-    subtitle: 'شبكة الطريق الدائري حول القاهرة الكبرى',
-    badge: 'مسار مخصص',
-    color: '#f59e0b', // Amber
+    name: 'الأتوبيس الترددي (BRT)',
+    subtitle: 'شبكة الطريق الدائري حول القاهرة الكبرى (48 محطة)',
+    badge: 'مسار مخصص سريع',
+    color: '#f59e0b',
     accentBg: 'bg-amber-50 text-amber-800 border-amber-200',
     iconName: 'Bus',
-    description: 'حافلات صديقة للبيئة تعمل بمسار معزول سريع حول الدائري بديلاً للميكروباص.',
+    description: 'حافلات سريعة ذات مسار معزول تسير على الطريق الدائري لربط محافظات القاهرة الكبرى والجيزة والقليوبية.',
   },
 ];
 
@@ -48,11 +130,11 @@ export const INITIAL_TRANSIT_LINES: TransitLine[] = [
   {
     id: 'metro_line_1',
     modeId: 'metro',
-    name: 'الخط الأول (حلوان - المرج الجديدة)',
+    name: 'الخط الأول (المرج - حلوان)',
     color: '#dc2626', // Red
     textColor: '#ffffff',
-    terminalA: 'حلوان',
-    terminalB: 'المرج الجديدة',
+    terminalA: 'المرج الجديدة',
+    terminalB: 'حلوان',
   },
   {
     id: 'metro_line_2',
@@ -66,49 +148,31 @@ export const INITIAL_TRANSIT_LINES: TransitLine[] = [
   {
     id: 'metro_line_3',
     modeId: 'metro',
-    name: 'الخط الثالث (عدلي منصور - محور روض الفرج / جامعة القاهرة)',
+    name: 'الخط الثالث (عدلي منصور - الكيت كات / تفرعات)',
     color: '#059669', // Emerald
     textColor: '#ffffff',
     terminalA: 'عدلي منصور',
     terminalB: 'محور روض الفرج',
   },
-  // LRT Line
+  // High Speed Train Line
   {
-    id: 'lrt_line_1',
+    id: 'hst_line',
     modeId: 'lrt_train',
-    name: 'القطار الكهربائي الخفيف (LRT)',
-    color: '#0284c7',
-    textColor: '#ffffff',
-    terminalA: 'عدلي منصور',
-    terminalB: 'مدينة الفنون والثقافة (العاصمة)',
-  },
-  {
-    id: 'hst_green_line',
-    modeId: 'lrt_train',
-    name: 'القطار الكهربائي السريع (الخط الأخضر: السخنة - مطروح)',
+    name: 'القطار الكهربائي السريع (العين السخنة - العلمين)',
     color: '#16a34a',
     textColor: '#ffffff',
     terminalA: 'العين السخنة',
-    terminalB: 'مرسى مطروح',
+    terminalB: 'العلمين',
   },
-  // Monorail Lines
+  // Monorail Line
   {
     id: 'monorail_east',
     modeId: 'monorail',
-    name: 'مونوريل شرق النيل (الاستاد - العاصمة الإدارية)',
+    name: 'مونوريل شرق النيل (الإستاد - مدينة العدالة)',
     color: '#7c3aed',
     textColor: '#ffffff',
-    terminalA: 'الاستاد (مدينة نصر)',
-    terminalB: 'مدينة العدالة (العاصمة الإدارية)',
-  },
-  {
-    id: 'monorail_west',
-    modeId: 'monorail',
-    name: 'مونوريل غرب النيل (وادي النيل المهندسين - 6 أكتوبر)',
-    color: '#9333ea',
-    textColor: '#ffffff',
-    terminalA: 'وادي النيل (المهندسين)',
-    terminalB: 'المنطقة الصناعية (6 أكتوبر)',
+    terminalA: 'الإستاد',
+    terminalB: 'مدينة العدالة',
   },
   // BRT Line
   {
@@ -117,198 +181,146 @@ export const INITIAL_TRANSIT_LINES: TransitLine[] = [
     name: 'الأتوبيس الترددي (مسار الطريق الدائري)',
     color: '#d97706',
     textColor: '#ffffff',
-    terminalA: 'عدلي منصور',
-    terminalB: 'المنيب',
+    terminalA: 'إسكندرية الزراعي',
+    terminalB: 'باسوس',
   },
 ];
 
+// Helper to determine interchanges
+const checkIsInterchange = (stationName: string, lineId: string): { isInterchange: boolean; interchangeLines?: string[]; notes?: string } => {
+  const norm = stationName.replace(/[إأآا]/g, 'ا').trim();
+
+  if (norm === 'الشهداء') {
+    return { isInterchange: true, interchangeLines: lineId === 'metro_line_1' ? ['metro_line_2'] : ['metro_line_1'], notes: 'محطة رمسيس التبادلية بين الخطين الأول والثاني ومحطة قطارات مصر' };
+  }
+  if (norm === 'السادات') {
+    return { isInterchange: true, interchangeLines: lineId === 'metro_line_1' ? ['metro_line_2'] : ['metro_line_1'], notes: 'محطة ميدان التحرير التبادلية بين الخطين الأول والثاني' };
+  }
+  if (norm === 'العتبة') {
+    return { isInterchange: true, interchangeLines: lineId === 'metro_line_2' ? ['metro_line_3'] : ['metro_line_2'], notes: 'محطة العتبة التبادلية بين الخطين الثاني والثالث' };
+  }
+  if (norm === 'ناصر') {
+    return { isInterchange: true, interchangeLines: lineId === 'metro_line_1' ? ['metro_line_3'] : ['metro_line_1'], notes: 'محطة ناصر التبادلية بين الخطين الأول والثالث' };
+  }
+  if (norm === 'جامعة القاهرة') {
+    return { isInterchange: true, interchangeLines: lineId === 'metro_line_2' ? ['metro_line_3'] : ['metro_line_2'], notes: 'محطة جامعة القاهرة التبادلية بين الخطين الثاني والثالث' };
+  }
+  if (norm === 'عدلي منصور') {
+    return { isInterchange: true, interchangeLines: lineId === 'metro_line_3' ? ['brt_ring_road'] : ['metro_line_3'], notes: 'المحطة المركزية التبادلية الكبرى (مترو، قطار، BRT)' };
+  }
+  if (norm === 'الاستاد') {
+    return { isInterchange: true, interchangeLines: ['monorail_east'], notes: 'محطة تبادلية مع مونوريل شرق النيل' };
+  }
+  if (norm === 'مدينة الفنون والثقافة') {
+    return { isInterchange: true, interchangeLines: ['hst_line'], notes: 'محطة تبادلية بالعاصمة الإدارية الجديدة' };
+  }
+  if (norm === 'المنيب') {
+    return { isInterchange: true, interchangeLines: ['brt_ring_road'], notes: 'محطة تبادلية جنوب الجيزة' };
+  }
+  if (norm === 'محمد نجيب') {
+    return { isInterchange: false, notes: 'محطة وسط البلد' };
+  }
+
+  return { isInterchange: false };
+};
+
+// Generate INITIAL_STATIONS from the exact arrays in transportationData
 export const INITIAL_STATIONS: Station[] = [
-  // --- METRO LINE 1 (حلوان إلى المرج الجديدة) ---
-  { id: 'm1_01', name: 'حلوان', modeId: 'metro', lineId: 'metro_line_1', order: 1 },
-  { id: 'm1_02', name: 'عين حلوان', modeId: 'metro', lineId: 'metro_line_1', order: 2 },
-  { id: 'm1_03', name: 'جامعة حلوان', modeId: 'metro', lineId: 'metro_line_1', order: 3 },
-  { id: 'm1_04', name: 'وادي حوف', modeId: 'metro', lineId: 'metro_line_1', order: 4 },
-  { id: 'm1_05', name: 'حدائق حلوان', modeId: 'metro', lineId: 'metro_line_1', order: 5 },
-  { id: 'm1_06', name: 'المعصرة', modeId: 'metro', lineId: 'metro_line_1', order: 6 },
-  { id: 'm1_07', name: 'طرة الأسمنت', modeId: 'metro', lineId: 'metro_line_1', order: 7 },
-  { id: 'm1_08', name: 'كوتسيكا', modeId: 'metro', lineId: 'metro_line_1', order: 8 },
-  { id: 'm1_09', name: 'طرة البلد', modeId: 'metro', lineId: 'metro_line_1', order: 9 },
-  { id: 'm1_10', name: 'ثكنات المعادي', modeId: 'metro', lineId: 'metro_line_1', order: 10 },
-  { id: 'm1_11', name: 'المعادي', modeId: 'metro', lineId: 'metro_line_1', order: 11 },
-  { id: 'm1_12', name: 'حدائق المعادي', modeId: 'metro', lineId: 'metro_line_1', order: 12 },
-  { id: 'm1_13', name: 'دار السلام', modeId: 'metro', lineId: 'metro_line_1', order: 13 },
-  { id: 'm1_14', name: 'الزهراء', modeId: 'metro', lineId: 'metro_line_1', order: 14 },
-  { id: 'm1_15', name: 'مار جرجس', modeId: 'metro', lineId: 'metro_line_1', order: 15 },
-  { id: 'm1_16', name: 'الملك الصالح', modeId: 'metro', lineId: 'metro_line_1', order: 16 },
-  { id: 'm1_17', name: 'السيدة زينب', modeId: 'metro', lineId: 'metro_line_1', order: 17 },
-  { id: 'm1_18', name: 'سعد زغلول', modeId: 'metro', lineId: 'metro_line_1', order: 18 },
-  { id: 'm1_19', name: 'السادات', modeId: 'metro', lineId: 'metro_line_1', order: 19, isInterchange: true, interchangeLines: ['metro_line_2'], notes: 'محطة تبادلية كبرى مع الخط الثاني (شبرا - المنيب)' },
-  { id: 'm1_20', name: 'جمال عبد الناصر', modeId: 'metro', lineId: 'metro_line_1', order: 20, isInterchange: true, interchangeLines: ['metro_line_3'], notes: 'محطة تبادلية مع الخط الثالث' },
-  { id: 'm1_21', name: 'أحمد عرابي', modeId: 'metro', lineId: 'metro_line_1', order: 21 },
-  { id: 'm1_22', name: 'الشهداء', modeId: 'metro', lineId: 'metro_line_1', order: 22, isInterchange: true, interchangeLines: ['metro_line_2'], notes: 'محطة رمسيس التبادلية مع الخط الثاني ومحطة قطارات مصر' },
-  { id: 'm1_23', name: 'غمرة', modeId: 'metro', lineId: 'metro_line_1', order: 23 },
-  { id: 'm1_24', name: 'الدمرداش', modeId: 'metro', lineId: 'metro_line_1', order: 24 },
-  { id: 'm1_25', name: 'منشية الصدر', modeId: 'metro', lineId: 'metro_line_1', order: 25 },
-  { id: 'm1_26', name: 'كوبري القبة', modeId: 'metro', lineId: 'metro_line_1', order: 26 },
-  { id: 'm1_27', name: 'حمامات القبة', modeId: 'metro', lineId: 'metro_line_1', order: 27 },
-  { id: 'm1_28', name: 'سراي القبة', modeId: 'metro', lineId: 'metro_line_1', order: 28 },
-  { id: 'm1_29', name: 'حدائق الزيتون', modeId: 'metro', lineId: 'metro_line_1', order: 29 },
-  { id: 'm1_30', name: 'حلمية الزيتون', modeId: 'metro', lineId: 'metro_line_1', order: 30 },
-  { id: 'm1_31', name: 'المطرية', modeId: 'metro', lineId: 'metro_line_1', order: 31 },
-  { id: 'm1_32', name: 'عين شمس', modeId: 'metro', lineId: 'metro_line_1', order: 32 },
-  { id: 'm1_33', name: 'عزبة النخل', modeId: 'metro', lineId: 'metro_line_1', order: 33 },
-  { id: 'm1_34', name: 'المرج', modeId: 'metro', lineId: 'metro_line_1', order: 34 },
-  { id: 'm1_35', name: 'المرج الجديدة', modeId: 'metro', lineId: 'metro_line_1', order: 35 },
+  // --- الخط الأول للمترو (المرج الجديدة - حلوان) 35 محطة ---
+  ...transportationData.metro.lines.line1.stations.map((name, index) => {
+    const order = index + 1;
+    const { isInterchange, interchangeLines, notes } = checkIsInterchange(name, 'metro_line_1');
+    return {
+      id: `m1_${String(order).padStart(2, '0')}`,
+      name,
+      modeId: 'metro' as const,
+      lineId: 'metro_line_1',
+      order,
+      isInterchange,
+      interchangeLines,
+      notes,
+    };
+  }),
 
-  // --- METRO LINE 2 (شبرا الخيمة إلى المنيب) ---
-  { id: 'm2_01', name: 'شبرا الخيمة', modeId: 'metro', lineId: 'metro_line_2', order: 1 },
-  { id: 'm2_02', name: 'كلية الزراعة', modeId: 'metro', lineId: 'metro_line_2', order: 2 },
-  { id: 'm2_03', name: 'المظلات', modeId: 'metro', lineId: 'metro_line_2', order: 3 },
-  { id: 'm2_04', name: 'الخلفاوي', modeId: 'metro', lineId: 'metro_line_2', order: 4 },
-  { id: 'm2_05', name: 'سانت تريزا', modeId: 'metro', lineId: 'metro_line_2', order: 5 },
-  { id: 'm2_06', name: 'روض الفرج', modeId: 'metro', lineId: 'metro_line_2', order: 6 },
-  { id: 'm2_07', name: 'مسرة', modeId: 'metro', lineId: 'metro_line_2', order: 7 },
-  { id: 'm2_08', name: 'الشهداء', modeId: 'metro', lineId: 'metro_line_2', order: 8, isInterchange: true, interchangeLines: ['metro_line_1'], notes: 'محطة تبادلية مع الخط الأول ومحطة مصر للقطارات' },
-  { id: 'm2_09', name: 'العتبة', modeId: 'metro', lineId: 'metro_line_2', order: 9, isInterchange: true, interchangeLines: ['metro_line_3'], notes: 'محطة تبادلية مع الخط الثالث' },
-  { id: 'm2_10', name: 'محمد نجيب', modeId: 'metro', lineId: 'metro_line_2', order: 10 },
-  { id: 'm2_11', name: 'السادات', modeId: 'metro', lineId: 'metro_line_2', order: 11, isInterchange: true, interchangeLines: ['metro_line_1'], notes: 'محطة ميدان التحرير التبادلية مع الخط الأول' },
-  { id: 'm2_12', name: 'الأوبرا', modeId: 'metro', lineId: 'metro_line_2', order: 12 },
-  { id: 'm2_13', name: 'الدقي', modeId: 'metro', lineId: 'metro_line_2', order: 13 },
-  { id: 'm2_14', name: 'البحوث', modeId: 'metro', lineId: 'metro_line_2', order: 14 },
-  { id: 'm2_15', name: 'جامعة القاهرة', modeId: 'metro', lineId: 'metro_line_2', order: 15, isInterchange: true, interchangeLines: ['metro_line_3'], notes: 'محطة تبادلية مع تفريعة الخط الثالث الجنوبية' },
-  { id: 'm2_16', name: 'فيصل', modeId: 'metro', lineId: 'metro_line_2', order: 16 },
-  { id: 'm2_17', name: 'الجيزة', modeId: 'metro', lineId: 'metro_line_2', order: 17 },
-  { id: 'm2_18', name: 'ضواحي الجيزة', modeId: 'metro', lineId: 'metro_line_2', order: 18 },
-  { id: 'm2_19', name: 'ساقية مكي', modeId: 'metro', lineId: 'metro_line_2', order: 19 },
-  { id: 'm2_20', name: 'المنيب', modeId: 'metro', lineId: 'metro_line_2', order: 20, isInterchange: true, interchangeLines: ['brt_ring_road'], notes: 'محطة تبادلية مع الأتوبيس الترددي BRT' },
+  // --- الخط الثاني للمترو (شبرا الخيمة - المنيب) 20 محطة ---
+  ...transportationData.metro.lines.line2.stations.map((name, index) => {
+    const order = index + 1;
+    const { isInterchange, interchangeLines, notes } = checkIsInterchange(name, 'metro_line_2');
+    return {
+      id: `m2_${String(order).padStart(2, '0')}`,
+      name,
+      modeId: 'metro' as const,
+      lineId: 'metro_line_2',
+      order,
+      isInterchange,
+      interchangeLines,
+      notes,
+    };
+  }),
 
-  // --- METRO LINE 3 (عدلي منصور إلى الكيت كات ثم التفرعات) ---
-  { id: 'm3_01', name: 'عدلي منصور', modeId: 'metro', lineId: 'metro_line_3', order: 1, isInterchange: true, interchangeLines: ['lrt_line_1', 'brt_ring_road'], notes: 'المحطة المركزية التبادلية الأكبر في الشرق الأوسط (مترو، LRT، BRT)' },
-  { id: 'm3_02', name: 'الهايكستب', modeId: 'metro', lineId: 'metro_line_3', order: 2 },
-  { id: 'm3_03', name: 'عمر بن الخطاب', modeId: 'metro', lineId: 'metro_line_3', order: 3 },
-  { id: 'm3_04', name: 'قباء', modeId: 'metro', lineId: 'metro_line_3', order: 4 },
-  { id: 'm3_05', name: 'هشام بركات', modeId: 'metro', lineId: 'metro_line_3', order: 5 },
-  { id: 'm3_06', name: 'النزهة', modeId: 'metro', lineId: 'metro_line_3', order: 6 },
-  { id: 'm3_07', name: 'نادي الشمس', modeId: 'metro', lineId: 'metro_line_3', order: 7 },
-  { id: 'm3_08', name: 'ألف مسكن', modeId: 'metro', lineId: 'metro_line_3', order: 8 },
-  { id: 'm3_09', name: 'هليوبوليس', modeId: 'metro', lineId: 'metro_line_3', order: 9 },
-  { id: 'm3_10', name: 'هارون', modeId: 'metro', lineId: 'metro_line_3', order: 10 },
-  { id: 'm3_11', name: 'الأهرام', modeId: 'metro', lineId: 'metro_line_3', order: 11 },
-  { id: 'm3_12', name: 'كلية البنات', modeId: 'metro', lineId: 'metro_line_3', order: 12 },
-  { id: 'm3_13', name: 'استاد القاهرة', modeId: 'metro', lineId: 'metro_line_3', order: 13, isInterchange: true, interchangeLines: ['monorail_east'], notes: 'محطة تبادلية مع مونوريل شرق النيل' },
-  { id: 'm3_14', name: 'المعرض', modeId: 'metro', lineId: 'metro_line_3', order: 14 },
-  { id: 'm3_15', name: 'العباسية', modeId: 'metro', lineId: 'metro_line_3', order: 15 },
-  { id: 'm3_16', name: 'عبده باشا', modeId: 'metro', lineId: 'metro_line_3', order: 16 },
-  { id: 'm3_17', name: 'الجيش', modeId: 'metro', lineId: 'metro_line_3', order: 17 },
-  { id: 'm3_18', name: 'باب الشعرية', modeId: 'metro', lineId: 'metro_line_3', order: 18 },
-  { id: 'm3_19', name: 'العتبة', modeId: 'metro', lineId: 'metro_line_3', order: 19, isInterchange: true, interchangeLines: ['metro_line_2'], notes: 'محطة تبادلية مع الخط الثاني' },
-  { id: 'm3_20', name: 'جمال عبد الناصر', modeId: 'metro', lineId: 'metro_line_3', order: 20, isInterchange: true, interchangeLines: ['metro_line_1'], notes: 'محطة تبادلية مع الخط الأول' },
-  { id: 'm3_21', name: 'ماسبيرو', modeId: 'metro', lineId: 'metro_line_3', order: 21 },
-  { id: 'm3_22', name: 'صفاء حجازي', modeId: 'metro', lineId: 'metro_line_3', order: 22 },
-  { id: 'm3_23', name: 'الكيت كات', modeId: 'metro', lineId: 'metro_line_3', order: 23, notes: 'نقطة تفرع الخط الثالث شمالاً وجنوباً' },
-  // تفرع شمالي (محور روض الفرج)
-  { id: 'm3_24', name: 'السودان', modeId: 'metro', lineId: 'metro_line_3', order: 24 },
-  { id: 'm3_25', name: 'إمبابة', modeId: 'metro', lineId: 'metro_line_3', order: 25 },
-  { id: 'm3_26', name: 'البوهي', modeId: 'metro', lineId: 'metro_line_3', order: 26 },
-  { id: 'm3_27', name: 'القومية العربية', modeId: 'metro', lineId: 'metro_line_3', order: 27 },
-  { id: 'm3_28', name: 'الطريق الدائري', modeId: 'metro', lineId: 'metro_line_3', order: 28 },
-  { id: 'm3_29', name: 'محور روض الفرج', modeId: 'metro', lineId: 'metro_line_3', order: 29 },
-  // تفرع جنوبي (جامعة القاهرة)
-  { id: 'm3_30', name: 'التوفيقية', modeId: 'metro', lineId: 'metro_line_3', order: 30 },
-  { id: 'm3_31', name: 'وادي النيل', modeId: 'metro', lineId: 'metro_line_3', order: 31, isInterchange: true, interchangeLines: ['monorail_west'], notes: 'تبادل مع مونوريل غرب النيل (6 أكتوبر)' },
-  { id: 'm3_32', name: 'جامعة الدول العربية', modeId: 'metro', lineId: 'metro_line_3', order: 32 },
-  { id: 'm3_33', name: 'بولاق الدكرور', modeId: 'metro', lineId: 'metro_line_3', order: 33 },
-  { id: 'm3_34', name: 'جامعة القاهرة', modeId: 'metro', lineId: 'metro_line_3', order: 34, isInterchange: true, interchangeLines: ['metro_line_2'], notes: 'محطة تبادلية مع الخط الثاني' },
+  // --- الخط الثالث للمترو (عدلي منصور - تفرعات روض الفرج وجامعة القاهرة) 34 محطة ---
+  ...transportationData.metro.lines.line3.stations.map((name, index) => {
+    const order = index + 1;
+    const { isInterchange, interchangeLines, notes } = checkIsInterchange(name, 'metro_line_3');
+    return {
+      id: `m3_${String(order).padStart(2, '0')}`,
+      name,
+      modeId: 'metro' as const,
+      lineId: 'metro_line_3',
+      order,
+      isInterchange,
+      interchangeLines,
+      notes,
+    };
+  }),
 
-  // --- LRT القطار الكهربائي الخفيف (عدلي منصور - العاصمة الإدارية والعاشر) ---
-  { id: 'lrt_01', name: 'عدلي منصور', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 1, isInterchange: true, interchangeLines: ['metro_line_3', 'brt_ring_road'] },
-  { id: 'lrt_02', name: 'العبور', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 2 },
-  { id: 'lrt_03', name: 'المستقبل', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 3 },
-  { id: 'lrt_04', name: 'الشروق', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 4 },
-  { id: 'lrt_05', name: 'هليوبوليس الجديدة', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 5 },
-  { id: 'lrt_06', name: 'بدر', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 6, notes: 'محطة التفرع نحو العاصمة ونحو العاشر من رمضان' },
-  { id: 'lrt_07', name: 'الروبيكي', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 7 },
-  { id: 'lrt_08', name: 'حدائق العاصمة', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 8 },
-  { id: 'lrt_09', name: 'مطار العاصمة', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 9 },
-  { id: 'lrt_10', name: 'مدينة الفنون والثقافة (العاصمة)', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 10, isInterchange: true, interchangeLines: ['monorail_east'], notes: 'محطة تبادلية كبرى مع مونوريل العاصمة' },
-  { id: 'lrt_11', name: 'المنطقة الصناعية (العاشر)', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 11 },
-  { id: 'lrt_12', name: 'العاشر من رمضان 1', modeId: 'lrt_train', lineId: 'lrt_line_1', order: 12 },
+  // --- القطار الكهربائي السريع (العين السخنة - العلمين) 15 محطة ---
+  ...transportationData.highSpeedTrain.stations.map((name, index) => {
+    const order = index + 1;
+    const { isInterchange, interchangeLines, notes } = checkIsInterchange(name, 'hst_line');
+    return {
+      id: `hst_${String(order).padStart(2, '0')}`,
+      name,
+      modeId: 'lrt_train' as const,
+      lineId: 'hst_line',
+      order,
+      isInterchange,
+      interchangeLines,
+      notes,
+    };
+  }),
 
-  // --- القطار الكهربائي السريع (الخط الأخضر) ---
-  { id: 'hst_01', name: 'العين السخنة', modeId: 'lrt_train', lineId: 'hst_green_line', order: 1 },
-  { id: 'hst_02', name: 'العاصمة الإدارية (المركزية)', modeId: 'lrt_train', lineId: 'hst_green_line', order: 2 },
-  { id: 'hst_03', name: 'محمد نجيب', modeId: 'lrt_train', lineId: 'hst_green_line', order: 3 },
-  { id: 'hst_04', name: 'جنوب الجيزة', modeId: 'lrt_train', lineId: 'hst_green_line', order: 4 },
-  { id: 'hst_05', name: 'حدائق أكتوبر', modeId: 'lrt_train', lineId: 'hst_green_line', order: 5 },
-  { id: 'hst_06', name: 'مدينة 6 أكتوبر', modeId: 'lrt_train', lineId: 'hst_green_line', order: 6 },
-  { id: 'hst_07', name: 'سفنكس الجديدة', modeId: 'lrt_train', lineId: 'hst_green_line', order: 7 },
-  { id: 'hst_08', name: 'مدينة السادات', modeId: 'lrt_train', lineId: 'hst_green_line', order: 8 },
-  { id: 'hst_09', name: 'وادي النطرون', modeId: 'lrt_train', lineId: 'hst_green_line', order: 9 },
-  { id: 'hst_10', name: 'النوبارية', modeId: 'lrt_train', lineId: 'hst_green_line', order: 10 },
-  { id: 'hst_11', name: 'برج العرب', modeId: 'lrt_train', lineId: 'hst_green_line', order: 11 },
-  { id: 'hst_12', name: 'الإسكندرية (محطة الاستاد)', modeId: 'lrt_train', lineId: 'hst_green_line', order: 12 },
-  { id: 'hst_13', name: 'العلمين الجديدة', modeId: 'lrt_train', lineId: 'hst_green_line', order: 13 },
-  { id: 'hst_14', name: 'رأس الحكمة', modeId: 'lrt_train', lineId: 'hst_green_line', order: 14 },
-  { id: 'hst_15', name: 'مرسى مطروح', modeId: 'lrt_train', lineId: 'hst_green_line', order: 15 },
+  // --- مونوريل شرق النيل (الإستاد - مدينة العدالة) 22 محطة ---
+  ...transportationData.monorail.stations.map((name, index) => {
+    const order = index + 1;
+    const { isInterchange, interchangeLines, notes } = checkIsInterchange(name, 'monorail_east');
+    return {
+      id: `mono_e_${String(order).padStart(2, '0')}`,
+      name,
+      modeId: 'monorail' as const,
+      lineId: 'monorail_east',
+      order,
+      isInterchange,
+      interchangeLines,
+      notes,
+    };
+  }),
 
-  // --- مونوريل شرق النيل (العاصمة الإدارية) ---
-  { id: 'mono_e_01', name: 'الاستاد (مدينة نصر)', modeId: 'monorail', lineId: 'monorail_east', order: 1, isInterchange: true, interchangeLines: ['metro_line_3'] },
-  { id: 'mono_e_02', name: 'هشام بركات', modeId: 'monorail', lineId: 'monorail_east', order: 2 },
-  { id: 'mono_e_03', name: 'نوري خطاب', modeId: 'monorail', lineId: 'monorail_east', order: 3 },
-  { id: 'mono_e_04', name: 'الحي السابع', modeId: 'monorail', lineId: 'monorail_east', order: 4 },
-  { id: 'mono_e_05', name: 'ذاكر حسين', modeId: 'monorail', lineId: 'monorail_east', order: 5 },
-  { id: 'mono_e_06', name: 'المنطقة الحرة', modeId: 'monorail', lineId: 'monorail_east', order: 6 },
-  { id: 'mono_e_07', name: 'المشير طنطاوي', modeId: 'monorail', lineId: 'monorail_east', order: 7 },
-  { id: 'mono_e_08', name: 'كايرو فيستيفال سيتي', modeId: 'monorail', lineId: 'monorail_east', order: 8 },
-  { id: 'mono_e_09', name: 'الشويفات', modeId: 'monorail', lineId: 'monorail_east', order: 9 },
-  { id: 'mono_e_10', name: 'المستشفى الجوي', modeId: 'monorail', lineId: 'monorail_east', order: 10 },
-  { id: 'mono_e_11', name: 'حي النرجس', modeId: 'monorail', lineId: 'monorail_east', order: 11 },
-  { id: 'mono_e_12', name: 'حي المستثمرين', modeId: 'monorail', lineId: 'monorail_east', order: 12 },
-  { id: 'mono_e_13', name: 'الجامعة الأمريكية (AUC)', modeId: 'monorail', lineId: 'monorail_east', order: 13 },
-  { id: 'mono_e_14', name: 'بيت الوطن', modeId: 'monorail', lineId: 'monorail_east', order: 14 },
-  { id: 'mono_e_15', name: 'مسجد الفتاح العليم', modeId: 'monorail', lineId: 'monorail_east', order: 15 },
-  { id: 'mono_e_16', name: 'الحي الحكومي (العاصمة)', modeId: 'monorail', lineId: 'monorail_east', order: 16 },
-  { id: 'mono_e_17', name: 'حي المال والأعمال', modeId: 'monorail', lineId: 'monorail_east', order: 17 },
-  { id: 'mono_e_18', name: 'مدينة الفنون والثقافة', modeId: 'monorail', lineId: 'monorail_east', order: 18, isInterchange: true, interchangeLines: ['lrt_line_1'] },
-  { id: 'mono_e_19', name: 'مدينة العدالة (العاصمة الإدارية)', modeId: 'monorail', lineId: 'monorail_east', order: 19 },
-
-  // --- مونوريل غرب النيل (6 أكتوبر) ---
-  { id: 'mono_w_01', name: 'وادي النيل (المهندسين)', modeId: 'monorail', lineId: 'monorail_west', order: 1, isInterchange: true, interchangeLines: ['metro_line_3'] },
-  { id: 'mono_w_02', name: 'بشتيل', modeId: 'monorail', lineId: 'monorail_west', order: 2 },
-  { id: 'mono_w_03', name: 'محور 26 يوليو', modeId: 'monorail', lineId: 'monorail_west', order: 3 },
-  { id: 'mono_w_04', name: 'المنصورية', modeId: 'monorail', lineId: 'monorail_west', order: 4 },
-  { id: 'mono_w_05', name: 'طريق مصر الإسكندرية الصحراوي', modeId: 'monorail', lineId: 'monorail_west', order: 5 },
-  { id: 'mono_w_06', name: 'هايبر وان (الشيخ زايد)', modeId: 'monorail', lineId: 'monorail_west', order: 6 },
-  { id: 'mono_w_07', name: 'جهينة', modeId: 'monorail', lineId: 'monorail_west', order: 7 },
-  { id: 'mono_w_08', name: 'هيئة المجتمعات العمرانية', modeId: 'monorail', lineId: 'monorail_west', order: 8 },
-  { id: 'mono_w_09', name: 'ميدان الحصري', modeId: 'monorail', lineId: 'monorail_west', order: 9 },
-  { id: 'mono_w_10', name: 'مستشفى دار الفؤاد', modeId: 'monorail', lineId: 'monorail_west', order: 10 },
-  { id: 'mono_w_11', name: 'نقابة المهندسين', modeId: 'monorail', lineId: 'monorail_west', order: 11 },
-  { id: 'mono_w_12', name: 'المنطقة الصناعية (6 أكتوبر)', modeId: 'monorail', lineId: 'monorail_west', order: 12 },
-
-  // --- الأتوبيس الترددي السريع BRT (الطريق الدائري) ---
-  { id: 'brt_01', name: 'عدلي منصور', modeId: 'brt', lineId: 'brt_ring_road', order: 1, isInterchange: true, interchangeLines: ['metro_line_3', 'lrt_line_1'] },
-  { id: 'brt_02', name: 'موقف السلام', modeId: 'brt', lineId: 'brt_ring_road', order: 2 },
-  { id: 'brt_03', name: 'بهتيم', modeId: 'brt', lineId: 'brt_ring_road', order: 3 },
-  { id: 'brt_04', name: 'مسطرد', modeId: 'brt', lineId: 'brt_ring_road', order: 4 },
-  { id: 'brt_05', name: 'مؤسسة الزكاة', modeId: 'brt', lineId: 'brt_ring_road', order: 5 },
-  { id: 'brt_06', name: 'إسكندرية الزراعي', modeId: 'brt', lineId: 'brt_ring_road', order: 6 },
-  { id: 'brt_07', name: 'الوراق', modeId: 'brt', lineId: 'brt_ring_road', order: 7 },
-  { id: 'brt_08', name: 'إمبابة', modeId: 'brt', lineId: 'brt_ring_road', order: 8 },
-  { id: 'brt_09', name: 'محور 26 يوليو', modeId: 'brt', lineId: 'brt_ring_road', order: 9 },
-  { id: 'brt_10', name: 'صفط اللبن', modeId: 'brt', lineId: 'brt_ring_road', order: 10 },
-  { id: 'brt_11', name: 'فيصل', modeId: 'brt', lineId: 'brt_ring_road', order: 11 },
-  { id: 'brt_12', name: 'الهرم', modeId: 'brt', lineId: 'brt_ring_road', order: 12 },
-  { id: 'brt_13', name: 'ترسا', modeId: 'brt', lineId: 'brt_ring_road', order: 13 },
-  { id: 'brt_14', name: 'المنيب', modeId: 'brt', lineId: 'brt_ring_road', order: 14, isInterchange: true, interchangeLines: ['metro_line_2'] },
-  { id: 'brt_15', name: 'زهراء مصر القديمة', modeId: 'brt', lineId: 'brt_ring_road', order: 15 },
-  { id: 'brt_16', name: 'المعادي', modeId: 'brt', lineId: 'brt_ring_road', order: 16 },
-  { id: 'brt_17', name: 'كارفور المعادي', modeId: 'brt', lineId: 'brt_ring_road', order: 17 },
-  { id: 'brt_18', name: 'الأوتوستراد', modeId: 'brt', lineId: 'brt_ring_road', order: 18 },
-  { id: 'brt_19', name: 'محور المشير طنطاوي', modeId: 'brt', lineId: 'brt_ring_road', order: 19 },
-  { id: 'brt_20', name: 'التجمع الأول', modeId: 'brt', lineId: 'brt_ring_road', order: 20 },
-  { id: 'brt_21', name: 'أكاديمية الشرطة', modeId: 'brt', lineId: 'brt_ring_road', order: 21 },
-  { id: 'brt_22', name: 'طريق السويس', modeId: 'brt', lineId: 'brt_ring_road', order: 22 },
+  // --- الأتوبيس الترددي BRT (مسار الطريق الدائري) 48 محطة ---
+  ...transportationData.brt.stations.map((name, index) => {
+    const order = index + 1;
+    const { isInterchange, interchangeLines, notes } = checkIsInterchange(name, 'brt_ring_road');
+    return {
+      id: `brt_${String(order).padStart(2, '0')}`,
+      name,
+      modeId: 'brt' as const,
+      lineId: 'brt_ring_road',
+      order,
+      isInterchange,
+      interchangeLines,
+      notes,
+    };
+  }),
 ];
 
 export const INITIAL_FARE_BRACKETS: FareBracket[] = [
@@ -346,30 +358,38 @@ export const INITIAL_FARE_BRACKETS: FareBracket[] = [
     label: 'أكثر من 23 محطة',
   },
 
-  // LRT & High Speed Train Brackets
+  // High Speed Train Brackets
   {
-    id: 'lrt_tier_1',
+    id: 'hst_tier_1',
     modeId: 'lrt_train',
     minStations: 1,
     maxStations: 3,
-    price: 10,
+    price: 25,
     label: 'من 1 إلى 3 محطات',
   },
   {
-    id: 'lrt_tier_2',
+    id: 'hst_tier_2',
     modeId: 'lrt_train',
     minStations: 4,
     maxStations: 7,
-    price: 15,
+    price: 50,
     label: 'من 4 إلى 7 محطات',
   },
   {
-    id: 'lrt_tier_3',
+    id: 'hst_tier_3',
     modeId: 'lrt_train',
     minStations: 8,
+    maxStations: 11,
+    price: 75,
+    label: 'من 8 إلى 11 محطة',
+  },
+  {
+    id: 'hst_tier_4',
+    modeId: 'lrt_train',
+    minStations: 12,
     maxStations: 999,
-    price: 20,
-    label: 'أكثر من 7 محطات',
+    price: 100,
+    label: 'أكثر من 11 محطة',
   },
 
   // Monorail Brackets
@@ -393,12 +413,20 @@ export const INITIAL_FARE_BRACKETS: FareBracket[] = [
     id: 'monorail_tier_3',
     modeId: 'monorail',
     minStations: 13,
-    maxStations: 999,
+    maxStations: 18,
     price: 35,
-    label: 'أكثر من 12 محطة',
+    label: 'من 13 إلى 18 محطة',
+  },
+  {
+    id: 'monorail_tier_4',
+    modeId: 'monorail',
+    minStations: 19,
+    maxStations: 999,
+    price: 45,
+    label: 'أكثر من 18 محطة',
   },
 
-  // BRT Brackets
+  // BRT Brackets (مسار الطريق الدائري 48 محطة)
   {
     id: 'brt_tier_1',
     modeId: 'brt',
@@ -419,8 +447,16 @@ export const INITIAL_FARE_BRACKETS: FareBracket[] = [
     id: 'brt_tier_3',
     modeId: 'brt',
     minStations: 10,
-    maxStations: 999,
+    maxStations: 16,
     price: 15,
-    label: 'أكثر من 9 محطات',
+    label: 'من 10 إلى 16 محطة',
+  },
+  {
+    id: 'brt_tier_4',
+    modeId: 'brt',
+    minStations: 17,
+    maxStations: 999,
+    price: 20,
+    label: 'أكثر من 16 محطة',
   },
 ];

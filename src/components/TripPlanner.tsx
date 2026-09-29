@@ -86,18 +86,26 @@ export const TripPlanner: React.FC = () => {
   const startStation = currentModeStations.find((s) => s.id === startStationId);
   const endStation = currentModeStations.find((s) => s.id === endStationId);
 
-  // Popular quick-select stations for Cairo Metro / LRT / Monorail
+  // Popular quick-select stations for each mode
   const popularStationIds = useMemo(() => {
+    let targetNames: string[] = [];
     if (selectedModeId === 'metro') {
-      return ['m1_19', 'm2_08', 'm2_09', 'm3_01', 'm2_15']; // Sadat, Shohadaa, Attaba, Adly Mansour, Cairo Univ
+      targetNames = ['السادات', 'الشهداء', 'العتبة', 'عدلي منصور', 'جامعة القاهرة'];
     } else if (selectedModeId === 'lrt_train') {
-      return ['lrt_01', 'lrt_04', 'lrt_06', 'lrt_10']; // Adly Mansour, El-Shorouk, Badr, Arts & Culture
+      targetNames = ['العين السخنة', 'العاصمة الإدارية الجديدة', 'الإسكندرية', 'العلمين'];
     } else if (selectedModeId === 'monorail') {
-      return ['mono_e_01', 'mono_e_13', 'mono_e_18', 'mono_w_01', 'mono_w_09']; // Stadium, AUC, Arts, Wadi El-Nile, Hosary
+      targetNames = ['الإستاد', 'المشير طنطاوي', 'مدينة الفنون والثقافة', 'مدينة العدالة'];
     } else {
-      return ['brt_01', 'brt_14', 'brt_16', 'brt_12']; // Adly Mansour, El-Moneeb, Maadi, Haram
+      targetNames = ['إسكندرية الزراعي', 'عدلي منصور', 'كارفور المعادي', 'الهرم'];
     }
-  }, [selectedModeId]);
+
+    const matchedIds: string[] = [];
+    targetNames.forEach((targetName) => {
+      const found = currentModeStations.find((s) => s.name.trim() === targetName.trim());
+      if (found) matchedIds.push(found.id);
+    });
+    return matchedIds;
+  }, [selectedModeId, currentModeStations]);
 
   const getModeIcon = (id: TransportModeId) => {
     switch (id) {

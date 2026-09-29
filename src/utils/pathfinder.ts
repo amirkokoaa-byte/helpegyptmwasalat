@@ -82,9 +82,10 @@ export function buildTransitGraph(stations: Station[]) {
 
   // Cross-line interchange connections (stations with identical names or marked interchanges in the same transport mode)
   // Group stations by name within the same mode (e.g. Shohadaa on Line 1 and Line 2)
+  const normalize = (s: string) => s.replace(/[إأآا]/g, 'ا').trim();
   const nameMap = new Map<string, Station[]>();
   stations.forEach((st) => {
-    const key = `${st.modeId}:${st.name.trim()}`;
+    const key = `${st.modeId}:${normalize(st.name)}`;
     if (!nameMap.has(key)) {
       nameMap.set(key, []);
     }
