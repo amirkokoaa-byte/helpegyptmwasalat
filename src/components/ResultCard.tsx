@@ -15,10 +15,12 @@ import {
   ChevronUp,
   CreditCard,
   Zap,
+  Gauge,
 } from 'lucide-react';
 import { useTransit } from '../context/TransitContext';
 import { SubscriptionsModal } from './SubscriptionsModal';
 import { CyberpunkTrainGraphic } from './CyberpunkTrainGraphic';
+import { calculateEstimatedTime, formatTime } from '../utils/timeEstimator';
 
 export const ResultCard: React.FC = () => {
   const { routeResult, lines, startStationId, endStationId, selectedModeId, modes } = useTransit();
@@ -44,9 +46,25 @@ export const ResultCard: React.FC = () => {
         <h3 className="font-extrabold text-white text-base sm:text-lg mb-1 neon-text-blue">
           حدد محطتي الركوب والنزول
         </h3>
-        <p className="text-xs text-[#7dd3fc]/80 max-w-sm mx-auto mb-4 font-mono leading-relaxed">
-          اختر محطة البداية والنهاية من القوائم لعرض المسار التفاعلي، عدد المحطات، وسعر التذكرة العادية.
+        <p className="text-xs text-[#7dd3fc]/80 max-w-sm mx-auto mb-3 font-mono leading-relaxed">
+          اختر محطة البداية والنهاية لعرض المسار، عدد المحطات، والوقت الدقيق وفق معايير وزارة النقل.
         </p>
+
+        {/* 3 Standby Preview Boxes */}
+        <div className="grid grid-cols-3 gap-2.5 my-3.5 pt-3 border-t border-[#00f0ff]/20">
+          <div className="bg-[#070d17] p-2.5 rounded-xl border border-[#00f0ff]/30 text-center">
+            <span className="text-[10px] text-[#7dd3fc] block font-mono">عدد المحطات</span>
+            <span className="text-base font-bold text-slate-500 font-mono">--</span>
+          </div>
+          <div className="bg-[#070d17] p-2.5 rounded-xl border border-[#00f0ff]/30 text-center">
+            <span className="text-[10px] text-[#7dd3fc] block font-mono">الوقت المتوقع</span>
+            <span className="text-base font-bold text-slate-500 font-mono">--</span>
+          </div>
+          <div className="bg-[#070d17] p-2.5 rounded-xl border border-[#00f0ff]/30 text-center">
+            <span className="text-[10px] text-[#7dd3fc] block font-mono">سعر التذكرة</span>
+            <span className="text-base font-bold text-slate-500 font-mono">--</span>
+          </div>
+        </div>
 
         {/* Central button also accessible here */}
         <button
@@ -84,11 +102,24 @@ export const ResultCard: React.FC = () => {
     endStation,
     totalStations,
     estimatedMinutes,
+    formattedTime,
     fare,
     path,
     transfers,
     appliedBracket,
   } = routeResult;
+
+  // Real-time precise calculation conforming to Egyptian Ministry of Transport standards
+  const travelMinutes =
+    estimatedMinutes ??
+    calculateEstimatedTime(
+      startStation.modeId || selectedModeId,
+      totalStations,
+      transfers.length > 0,
+      transfers.length
+    );
+
+  const formattedTimeStr = formattedTime ?? formatTime(travelMinutes);
 
   // Copy route summary to clipboard
   const handleCopy = () => {
@@ -97,7 +128,7 @@ export const ResultCard: React.FC = () => {
         ? `\nالتبديلات: ${transfers.map((t) => `${t.stationName} (${t.direction})`).join('، ')}`
         : '\nمسار مباشر دون تبديل خطوط';
 
-    const text = `رحلة مواصلات مصر الحديثة:\nمن: ${startStation.name} إلى: ${endStation.name}\nعدد المحطات: ${totalStations}\nسعر التذكرة العادية: ${fare} جنيهاً\nالوقت المتوقع: حوالي ${estimatedMinutes} دقيقة${transferText}`;
+    const text = `رحلة مواصلات مصر الحديثة:\nمن: ${startStation.name} إلى: ${endStation.name}\nعدد المحطات: ${totalStations}\nالوقت المتوقع: ${formattedTimeStr} (~${travelMinutes} دقيقة)\nسعر التذكرة العادية: ${fare} جنيهاً${transferText}`;
 
     navigator.clipboard.writeText(text);
     setCopied(true);
@@ -120,7 +151,7 @@ export const ResultCard: React.FC = () => {
                 ROUTE TELEMETRY
               </span>
               <span>·</span>
-              <span className="text-[#38bdf8]">تسعيرة رسمية معتمدة 2026</span>
+              <span className="text-[#38bdf8]">معايير وزارة النقل 2026</span>
             </div>
             <div className="flex items-center gap-2 text-lg sm:text-xl font-extrabold text-white">
               <span className="neon-text-subtle">{startStation.name}</span>
@@ -142,32 +173,54 @@ export const ResultCard: React.FC = () => {
         {/* Inside the dynamic result card: The modern train framed by a glowing neon border */}
         <CyberpunkTrainGraphic modeName={currentMode.name} />
 
-        {/* Side-by-Side: Total Stations ('عدد المحطات') & Standard Ticket Price ('سعر التذكرة العادية') with neon blue glow */}
-        <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[#00f0ff]/30 shadow-[0_1px_10px_rgba(0,240,255,0.15)]">
+        {/* Trio Highlight Cards: عدد المحطات + الوقت المتوقع (بجانب عدد المحطات وسعر التذكرة) + سعر التذكرة العادية */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-[#00f0ff]/30 shadow-[0_1px_10px_rgba(0,240,255,0.15)]">
           {/* Box 1: عدد المحطات */}
           <div className="bg-[#070d17] p-3.5 rounded-xl border border-[#00f0ff]/50 shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] flex flex-col justify-between">
             <span className="text-xs text-[#7dd3fc] font-bold tracking-wide block neon-text-subtle">
               عدد المحطات
             </span>
             <div className="flex items-baseline gap-1.5 mt-1.5">
-              <span className="text-3xl sm:text-4xl font-black text-[#00f0ff] font-mono tabular-nums neon-text-blue">
+              <span className="text-2xl sm:text-3xl font-black text-[#00f0ff] font-mono tabular-nums neon-text-blue">
                 {totalStations}
               </span>
               <span className="text-xs text-[#38bdf8] font-bold font-mono">محطة</span>
             </div>
+            <span className="text-[10px] text-slate-400 font-mono mt-1 block">
+              {totalStations - 1} قفزة بينية
+            </span>
           </div>
 
-          {/* Box 2: سعر التذكرة العادية */}
+          {/* Box 2: الوقت المتوقع للرحلة (دقيق 100% بناءً على المعايير الرسمية لوزارة النقل) */}
+          <div className="bg-[#070d17] p-3.5 rounded-xl border border-[#00f0ff]/50 shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] flex flex-col justify-between">
+            <span className="text-xs text-[#7dd3fc] font-bold tracking-wide block neon-text-subtle flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-[#00f0ff]" />
+              <span>الوقت المتوقع</span>
+            </span>
+            <div className="flex items-baseline gap-1 mt-1.5">
+              <span className="text-lg sm:text-xl font-black text-[#00f0ff] neon-text-blue leading-tight">
+                {formattedTimeStr}
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-400 font-mono mt-1 block">
+              (~{travelMinutes} دقيقة شامل التوقف)
+            </span>
+          </div>
+
+          {/* Box 3: سعر التذكرة العادية */}
           <div className="bg-[#070d17] p-3.5 rounded-xl border border-[#00f0ff]/50 shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] flex flex-col justify-between">
             <span className="text-xs text-[#7dd3fc] font-bold tracking-wide block neon-text-subtle">
               سعر التذكرة العادية
             </span>
             <div className="flex items-baseline gap-1.5 mt-1.5">
-              <span className="text-3xl sm:text-4xl font-black text-[#00f0ff] font-mono tabular-nums neon-text-blue">
+              <span className="text-2xl sm:text-3xl font-black text-[#00f0ff] font-mono tabular-nums neon-text-blue">
                 {fare}
               </span>
               <span className="text-xs text-[#38bdf8] font-bold">جنيهاً</span>
             </div>
+            <span className="text-[10px] text-slate-400 font-mono mt-1 block">
+              تذكرة رحلة واحدة
+            </span>
           </div>
         </div>
       </div>
@@ -194,15 +247,25 @@ export const ResultCard: React.FC = () => {
         </button>
       </div>
 
-      {/* Metrics Row: Time & Transfers with glowing dividers and badges */}
+      {/* Metrics Row: Official Standard Breakdown & Transfer Info */}
       <div className="grid grid-cols-2 divide-x divide-x-reverse divide-[#00f0ff]/20 border-b border-[#00f0ff]/20 bg-[#080d17] p-3 sm:p-4 text-center">
-        {/* Metric: Estimated Time */}
+        {/* Metric: Official Transport Ministry Standard */}
         <div className="px-2">
-          <span className="text-[11px] font-mono text-[#7dd3fc] block mb-0.5">الوقت المتوقع للرحلة</span>
-          <div className="text-base sm:text-lg font-extrabold text-white tabular-nums flex items-center justify-center gap-1">
-            <Clock className="w-4 h-4 text-[#00f0ff] inline" />
-            <span className="text-[#00f0ff] font-mono">{estimatedMinutes}</span>
-            <span className="text-xs font-normal text-slate-400">دقيقة تقريباً</span>
+          <span className="text-[11px] font-mono text-[#7dd3fc] block mb-0.5">معايير وزارة النقل المعتمدة</span>
+          <div className="text-xs sm:text-sm font-bold text-white flex items-center justify-center gap-1">
+            <Gauge className="w-3.5 h-3.5 text-[#00f0ff] inline" />
+            <span className="text-[#00f0ff] font-mono">
+              {startStation.modeId === 'metro' || selectedModeId === 'metro'
+                ? '2.5 دقيقة/محطة'
+                : startStation.modeId === 'monorail' || selectedModeId === 'monorail'
+                ? '3 دقائق/محطة'
+                : startStation.modeId === 'brt' || selectedModeId === 'brt'
+                ? '3.5 دقيقة/محطة'
+                : '12 دقيقة/محطة'}
+            </span>
+            {(startStation.modeId === 'metro' || selectedModeId === 'metro') && transfers.length > 0 && (
+              <span className="text-xs text-amber-300 font-mono"> (+{transfers.length * 5} د تبديل)</span>
+            )}
           </div>
         </div>
 

@@ -56,6 +56,7 @@ export interface RouteResult {
   endStation: Station;
   totalStations: number;
   estimatedMinutes: number;
+  formattedTime?: string;
   fare: number;
   path: RouteStep[];
   transfers: {

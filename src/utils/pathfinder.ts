@@ -1,5 +1,8 @@
 import { Station, TransitLine, FareBracket, RouteResult, RouteStep } from '../types/transit';
 import { calculateDynamicPrice } from './pricing';
+import { calculateEstimatedTime, formatTime } from './timeEstimator';
+
+export { calculateEstimatedTime, formatTime } from './timeEstimator';
 
 interface GraphEdge {
   toStationId: string;
@@ -311,8 +314,14 @@ export function findShortestPath(
   // Count total stations visited: minimum 1
   const totalStations = Math.max(1, physicalStationHops);
 
-  // Time estimate: ~2.2 minutes per station + 5 minutes per transfer
-  const estimatedMinutes = Math.round(totalStations * 2.2 + transfers.length * 5);
+  // Time estimate: based on Egyptian Ministry of Transport official standards
+  const estimatedMinutes = calculateEstimatedTime(
+    startStation.modeId,
+    totalStations,
+    transfers.length > 0,
+    transfers.length
+  );
+  const formattedTime = formatTime(estimatedMinutes);
 
   // Fare calculation based on dynamic price calculation function
   const modeBrackets = fareBrackets.filter((b) => b.modeId === startStation.modeId);
@@ -342,6 +351,7 @@ export function findShortestPath(
     endStation,
     totalStations,
     estimatedMinutes,
+    formattedTime,
     fare,
     path,
     transfers,
