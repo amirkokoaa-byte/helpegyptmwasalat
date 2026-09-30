@@ -97,7 +97,7 @@ export const SubscriptionsModal: React.FC<SubscriptionsModalProps> = ({
         </div>
 
         {/* Project Selector Bar (Quick Switch) */}
-        <div className="bg-[#09101d] border-b border-[#00f0ff]/20 px-4 py-2.5 flex items-center gap-2 overflow-x-auto text-xs shrink-0">
+        <div className="bg-[#09101d] border-b border-[#00f0ff]/20 px-3 sm:px-4 py-2 sm:py-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar text-xs shrink-0">
           <span className="text-[#00f0ff] font-mono font-bold shrink-0">PROJECT // المشروع:</span>
           {(['metro', 'monorail', 'brt', 'lrt_train'] as TransportModeId[]).map((modeKey) => {
             const data = SUBSCRIPTIONS_DATA[modeKey];
@@ -127,7 +127,7 @@ export const SubscriptionsModal: React.FC<SubscriptionsModalProps> = ({
         </div>
 
         {/* Category Tabs */}
-        <div className="flex border-b border-[#00f0ff]/20 bg-[#070b14] px-4 pt-2 gap-2 overflow-x-auto text-xs font-semibold shrink-0">
+        <div className="flex border-b border-[#00f0ff]/20 bg-[#070b14] px-3 sm:px-4 pt-2 gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar text-xs font-semibold shrink-0">
           {currentData.studentPasses && (
             <button
               type="button"
@@ -199,8 +199,8 @@ export const SubscriptionsModal: React.FC<SubscriptionsModalProps> = ({
                 </p>
               </div>
 
-              <div className="border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
-                <table className="w-full text-right text-xs">
+              <div className="border border-slate-700/60 rounded-xl overflow-x-auto shadow-2xs">
+                <table className="w-full min-w-[480px] text-right text-xs">
                   <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
                     <tr>
                       <th className="p-3">نوع الاشتراك</th>
@@ -241,8 +241,8 @@ export const SubscriptionsModal: React.FC<SubscriptionsModalProps> = ({
                 </p>
               </div>
 
-              <div className="border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
-                <table className="w-full text-right text-xs">
+              <div className="border border-slate-700/60 rounded-xl overflow-x-auto shadow-2xs">
+                <table className="w-full min-w-[480px] text-right text-xs">
                   <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
                     <tr>
                       <th className="p-3">فئة الاشتراك</th>

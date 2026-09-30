@@ -61,18 +61,18 @@ function MainApp() {
       </section>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 z-10 pb-16">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-6 lg:px-8 z-10 pb-12 sm:pb-16">
         {activeTab === 'planner' && (
-          <div className="space-y-12">
+          <div className="space-y-6 sm:space-y-10">
             {/* The composition is a single high-tech, dark charcoal-grey card with continuous brilliant neon blue edge lighting effect over a dark reflective floor surface */}
-            <div className="neon-blue-card reflective-floor rounded-3xl p-5 sm:p-8 lg:p-10">
+            <div className="neon-blue-card reflective-floor rounded-2xl sm:rounded-3xl p-3 sm:p-6 lg:p-8">
               {/* Card Top Ambient HUD Bar */}
-              <div className="flex items-center justify-between border-b border-[#00f0ff]/30 pb-4 mb-7 text-xs font-mono">
-                <div className="flex items-center gap-2 text-[#00f0ff]">
-                  <Layers className="w-4 h-4 text-[#00f0ff] animate-pulse" />
-                  <span className="font-bold tracking-wider">CORE TRANSIT MATRIX // حاسبة الرحلات الرسمية</span>
+              <div className="flex items-center justify-between border-b border-[#00f0ff]/30 pb-3 sm:pb-4 mb-4 sm:mb-7 text-xs font-mono">
+                <div className="flex items-center gap-2 text-[#00f0ff] min-w-0">
+                  <Layers className="w-4 h-4 text-[#00f0ff] animate-pulse shrink-0" />
+                  <span className="font-bold tracking-wider truncate">CORE TRANSIT MATRIX // حاسبة الرحلات الرسمية</span>
                 </div>
-                <div className="hidden sm:flex items-center gap-3 text-slate-400 text-[11px]">
+                <div className="hidden sm:flex items-center gap-3 text-slate-400 text-[11px] shrink-0">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-[#00f0ff] animate-ping"></span>
                     ONLINE
@@ -82,28 +82,28 @@ function MainApp() {
                 </div>
               </div>
 
-              {/* Dual Column Layout inside the single high-tech card */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
-                {/* Left Column: Trip Planner Form & Cyber Info Guide */}
-                <div className="lg:col-span-7 space-y-6">
+              {/* Responsive Layout: Dual column on desktop (lg:), natural mobile flow */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-7 items-start">
+                {/* Trip Planner Form */}
+                <div className="lg:col-span-7 order-1 space-y-5 sm:space-y-6">
                   <TripPlanner />
 
-                  {/* 3-Step Quick Guide in Cyber Charcoal style */}
-                  <div className="bg-[#090f1a] rounded-2xl border border-[#00f0ff]/30 p-5 shadow-[inset_0_0_15px_rgba(0,240,255,0.06)]">
+                  {/* 3-Step Quick Guide visible on desktop underneath planner */}
+                  <div className="hidden lg:block bg-[#090f1a] rounded-2xl border border-[#00f0ff]/30 p-4 sm:p-5 shadow-[inset_0_0_15px_rgba(0,240,255,0.06)]">
                     <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-3.5 flex items-center gap-2 font-mono neon-text-subtle">
                       <HelpCircle className="w-4 h-4 text-[#00f0ff]" />
                       كيفية حساب الرحلة في 3 خطوات بسيطة:
                     </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300 font-mono">
-                      <div className="p-3.5 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
+                    <div className="grid grid-cols-3 gap-2.5 sm:gap-3 text-xs text-slate-300 font-mono">
+                      <div className="p-3 sm:p-3.5 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
                         <span className="font-bold text-[#00f0ff] block mb-1">1. اختر المشروع</span>
                         المترو، القطار السريع، المونوريل، أو الأتوبيس الترددي BRT.
                       </div>
-                      <div className="p-3.5 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
+                      <div className="p-3 sm:p-3.5 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
                         <span className="font-bold text-[#00f0ff] block mb-1">2. حدد المحطات</span>
                         اختر محطتي الركوب والنزول من القوائم الذكية.
                       </div>
-                      <div className="p-3.5 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
+                      <div className="p-3 sm:p-3.5 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
                         <span className="font-bold text-[#00f0ff] block mb-1">3. التذكرة والمسار</span>
                         شاهد عدد المحطات، سعر التذكرة، والتبديلات إن وجدت.
                       </div>
@@ -111,9 +111,31 @@ function MainApp() {
                   </div>
                 </div>
 
-                {/* Right Column: Result Card (framed train, neon labels & values, solid neon button) */}
-                <div className="lg:col-span-5 sticky top-24">
+                {/* Result Card: Sticky on desktop, right below planner on mobile */}
+                <div className="lg:col-span-5 order-2 lg:sticky lg:top-24">
                   <ResultCard />
+                </div>
+
+                {/* 3-Step Quick Guide on mobile (placed after ResultCard so mobile user sees their result immediately) */}
+                <div className="block lg:hidden order-3 w-full bg-[#090f1a] rounded-2xl border border-[#00f0ff]/30 p-3.5 sm:p-5 shadow-[inset_0_0_15px_rgba(0,240,255,0.06)]">
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2 font-mono neon-text-subtle">
+                    <HelpCircle className="w-4 h-4 text-[#00f0ff]" />
+                    كيفية حساب الرحلة في 3 خطوات بسيطة:
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-slate-300 font-mono">
+                    <div className="p-3 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
+                      <span className="font-bold text-[#00f0ff] block mb-1">1. اختر المشروع</span>
+                      المترو، القطار السريع، المونوريل، أو الأتوبيس الترددي BRT.
+                    </div>
+                    <div className="p-3 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
+                      <span className="font-bold text-[#00f0ff] block mb-1">2. حدد المحطات</span>
+                      اختر محطتي الركوب والنزول من القوائم الذكية.
+                    </div>
+                    <div className="p-3 rounded-xl bg-[#060a12] border border-[#00f0ff]/20 shadow-[0_0_6px_rgba(0,240,255,0.1)]">
+                      <span className="font-bold text-[#00f0ff] block mb-1">3. التذكرة والمسار</span>
+                      شاهد عدد المحطات، سعر التذكرة، والتبديلات إن وجدت.
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -121,13 +143,13 @@ function MainApp() {
         )}
 
         {activeTab === 'explorer' && (
-          <div className="neon-blue-card reflective-floor rounded-3xl p-5 sm:p-8">
+          <div className="neon-blue-card reflective-floor rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 lg:p-8">
             <NetworkExplorer />
           </div>
         )}
 
         {activeTab === 'fares' && (
-          <div className="neon-blue-card reflective-floor rounded-3xl p-5 sm:p-8">
+          <div className="neon-blue-card reflective-floor rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 lg:p-8">
             <FareGuide />
           </div>
         )}

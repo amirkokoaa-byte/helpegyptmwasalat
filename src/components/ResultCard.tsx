@@ -153,7 +153,7 @@ export const ResultCard: React.FC = () => {
               <span>·</span>
               <span className="text-[#38bdf8]">معايير وزارة النقل 2026</span>
             </div>
-            <div className="flex items-center gap-2 text-lg sm:text-xl font-extrabold text-white">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-base sm:text-xl font-extrabold text-white">
               <span className="neon-text-subtle">{startStation.name}</span>
               <span className="text-[#00f0ff] animate-pulse">➔</span>
               <span className="neon-text-subtle">{endStation.name}</span>
@@ -173,65 +173,65 @@ export const ResultCard: React.FC = () => {
         {/* Inside the dynamic result card: The modern train framed by a glowing neon border */}
         <CyberpunkTrainGraphic modeName={currentMode.name} />
 
-        {/* Trio Highlight Cards: عدد المحطات + الوقت المتوقع (بجانب عدد المحطات وسعر التذكرة) + سعر التذكرة العادية */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-[#00f0ff]/30 shadow-[0_1px_10px_rgba(0,240,255,0.15)]">
+        {/* Trio Highlight Cards: عدد المحطات + الوقت المتوقع + سعر التذكرة العادية */}
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-3 pt-3 border-t border-[#00f0ff]/30 shadow-[0_1px_10px_rgba(0,240,255,0.15)]">
           {/* Box 1: عدد المحطات */}
-          <div className="bg-[#070d17] p-3.5 rounded-xl border border-[#00f0ff]/50 shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] flex flex-col justify-between">
-            <span className="text-xs text-[#7dd3fc] font-bold tracking-wide block neon-text-subtle">
+          <div className="bg-[#070d17] p-2 sm:p-3 rounded-xl border border-[#00f0ff]/50 shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] flex flex-col justify-between text-center sm:text-right min-w-0">
+            <span className="text-[10px] sm:text-xs text-[#7dd3fc] font-bold tracking-wide block neon-text-subtle truncate">
               عدد المحطات
             </span>
-            <div className="flex items-baseline gap-1.5 mt-1.5">
-              <span className="text-2xl sm:text-3xl font-black text-[#00f0ff] font-mono tabular-nums neon-text-blue">
+            <div className="flex items-baseline justify-center sm:justify-start gap-1 mt-1">
+              <span className="text-lg sm:text-2xl lg:text-3xl font-black text-[#00f0ff] font-mono tabular-nums neon-text-blue">
                 {totalStations}
               </span>
-              <span className="text-xs text-[#38bdf8] font-bold font-mono">محطة</span>
+              <span className="text-[10px] sm:text-xs text-[#38bdf8] font-bold font-mono">محطة</span>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono mt-1 block">
-              {totalStations - 1} قفزة بينية
+            <span className="text-[8px] sm:text-[10px] text-slate-400 font-mono mt-0.5 block truncate">
+              {totalStations - 1} قفزة
             </span>
           </div>
 
           {/* Box 2: الوقت المتوقع للرحلة (دقيق 100% بناءً على المعايير الرسمية لوزارة النقل) */}
-          <div className="bg-[#070d17] p-3.5 rounded-xl border border-[#00f0ff]/50 shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] flex flex-col justify-between">
-            <span className="text-xs text-[#7dd3fc] font-bold tracking-wide block neon-text-subtle flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-[#00f0ff]" />
+          <div className="bg-[#070d17] p-2 sm:p-3 rounded-xl border border-[#00f0ff]/50 shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] flex flex-col justify-between text-center sm:text-right min-w-0">
+            <span className="text-[10px] sm:text-xs text-[#7dd3fc] font-bold tracking-wide block neon-text-subtle flex items-center justify-center sm:justify-start gap-1 truncate">
+              <Clock className="w-3 h-3 text-[#00f0ff] shrink-0" />
               <span>الوقت المتوقع</span>
             </span>
-            <div className="flex items-baseline gap-1 mt-1.5">
-              <span className="text-lg sm:text-xl font-black text-[#00f0ff] neon-text-blue leading-tight">
+            <div className="flex items-center justify-center sm:justify-start gap-1 mt-1 min-h-[1.75rem]">
+              <span className="text-[11px] sm:text-base lg:text-lg font-black text-[#00f0ff] neon-text-blue leading-tight text-center sm:text-right">
                 {formattedTimeStr}
               </span>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono mt-1 block">
-              (~{travelMinutes} دقيقة شامل التوقف)
+            <span className="text-[8px] sm:text-[10px] text-slate-400 font-mono mt-0.5 block truncate">
+              (~{travelMinutes} دقيقة)
             </span>
           </div>
 
           {/* Box 3: سعر التذكرة العادية */}
-          <div className="bg-[#070d17] p-3.5 rounded-xl border border-[#00f0ff]/50 shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] flex flex-col justify-between">
-            <span className="text-xs text-[#7dd3fc] font-bold tracking-wide block neon-text-subtle">
-              سعر التذكرة العادية
+          <div className="bg-[#070d17] p-2 sm:p-3 rounded-xl border border-[#00f0ff]/50 shadow-[inset_0_0_12px_rgba(0,240,255,0.15)] flex flex-col justify-between text-center sm:text-right min-w-0">
+            <span className="text-[10px] sm:text-xs text-[#7dd3fc] font-bold tracking-wide block neon-text-subtle truncate">
+              سعر التذكرة
             </span>
-            <div className="flex items-baseline gap-1.5 mt-1.5">
-              <span className="text-2xl sm:text-3xl font-black text-[#00f0ff] font-mono tabular-nums neon-text-blue">
+            <div className="flex items-baseline justify-center sm:justify-start gap-1 mt-1">
+              <span className="text-lg sm:text-2xl lg:text-3xl font-black text-[#00f0ff] font-mono tabular-nums neon-text-blue">
                 {fare}
               </span>
-              <span className="text-xs text-[#38bdf8] font-bold">جنيهاً</span>
+              <span className="text-[10px] sm:text-xs text-[#38bdf8] font-bold">ج.م</span>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono mt-1 block">
-              تذكرة رحلة واحدة
+            <span className="text-[8px] sm:text-[10px] text-slate-400 font-mono mt-0.5 block truncate">
+              رحلة واحدة
             </span>
           </div>
         </div>
       </div>
 
       {/* Main Central Button: عرض الاشتراكات والفئات الخاصة (Solid Glowing Neon Blue Button) */}
-      <div className="p-4 sm:p-5 bg-[#060a12] border-b border-[#00f0ff]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_15px_rgba(0,240,255,0.1)]">
+      <div className="p-3.5 sm:p-5 bg-[#060a12] border-b border-[#00f0ff]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_15px_rgba(0,240,255,0.1)]">
         <div className="text-xs text-slate-300">
-          <span className="font-bold block text-sm mb-0.5 text-white neon-text-subtle">
+          <span className="font-bold block text-xs sm:text-sm mb-0.5 text-white neon-text-subtle">
             اشتراكات الطلاب والفئات الخاصة متوفرة
           </span>
-          <p className="text-[#38bdf8] text-[11px] font-mono">
+          <p className="text-[#38bdf8] text-[10px] sm:text-[11px] font-mono">
             وفر حتى 85% عبر الاشتراكات الربع سنوية والسنوية المعتمدة.
           </p>
         </div>
@@ -240,7 +240,7 @@ export const ResultCard: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsSubscriptionsModalOpen(true)}
-          className="btn-neon-solid px-5 py-3 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+          className="btn-neon-solid w-full sm:w-auto min-h-[44px] px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-2 shrink-0 cursor-pointer"
         >
           <Sparkles className="w-4 h-4 fill-slate-950" />
           <span>عرض الاشتراكات والفئات الخاصة</span>

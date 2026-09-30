@@ -341,7 +341,7 @@ export const NetworkGraphView: React.FC = () => {
       </div>
 
       {/* SVG Canvas Area */}
-      <div className="relative bg-slate-950 overflow-hidden min-h-[460px] sm:min-h-[520px] select-none flex items-center justify-center p-4">
+      <div className="relative bg-slate-950 overflow-x-auto overflow-y-hidden min-h-[380px] sm:min-h-[520px] select-none flex items-center justify-start sm:justify-center p-2 sm:p-4">
         {/* Subtle grid pattern background */}
         <div
           className="absolute inset-0 opacity-15 pointer-events-none"
@@ -352,7 +352,7 @@ export const NetworkGraphView: React.FC = () => {
         />
 
         <div
-          className="w-full h-full flex items-center justify-center transition-transform duration-200"
+          className="w-full min-w-[620px] sm:min-w-0 h-full flex items-center justify-center transition-transform duration-200"
           style={{ transform: `scale(${zoom})` }}
         >
           <svg viewBox="80 80 940 580" className="w-full max-w-5xl h-auto" preserveAspectRatio="xMidYMid meet">

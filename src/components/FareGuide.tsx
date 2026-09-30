@@ -75,8 +75,8 @@ export const FareGuide: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="p-4">
-                  <table className="w-full text-right text-xs">
+                <div className="p-3 sm:p-4 overflow-x-auto">
+                  <table className="w-full min-w-[280px] text-right text-xs">
                     <thead>
                       <tr className="border-b border-slate-200 text-slate-500 font-semibold">
                         <th className="pb-2">الشريحة</th>

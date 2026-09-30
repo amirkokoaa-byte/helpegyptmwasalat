@@ -24,18 +24,19 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Zone 1: Brand Zone with glowing title */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#09121f] border border-[#00f0ff] flex items-center justify-center text-[#00f0ff] shadow-[0_0_15px_rgba(0,240,255,0.6)] shrink-0">
-              <Train className="w-6 h-6 animate-pulse" />
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-[#09121f] border border-[#00f0ff] flex items-center justify-center text-[#00f0ff] shadow-[0_0_15px_rgba(0,240,255,0.6)] shrink-0">
+              <Train className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" />
             </div>
-            <div>
+            <div className="min-w-0">
               <a
                 href="#"
-                className="text-sm sm:text-lg lg:text-xl font-extrabold tracking-tight text-white hover:text-[#00f0ff] transition-colors block neon-text-blue"
+                className="text-xs sm:text-base lg:text-lg font-extrabold tracking-tight text-white hover:text-[#00f0ff] transition-colors block neon-text-blue truncate sm:overflow-visible"
               >
-                عالم المواصلات في مصر الحديثة | Egypt Modern Transportation World
+                <span>عالم المواصلات في مصر</span>
+                <span className="hidden sm:inline"> الحديثة | Egypt Modern Transportation World</span>
               </a>
-              <p className="text-[10px] sm:text-xs text-[#7dd3fc] opacity-80 hidden sm:block font-mono">
+              <p className="text-[9px] sm:text-xs text-[#7dd3fc] opacity-80 hidden sm:block font-mono truncate">
                 SMART TRANSIT NETWORK // METRO · HIGH-SPEED TRAIN · MONORAIL · BRT
               </p>
             </div>
@@ -76,10 +77,10 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
           </nav>
 
           {/* Zone 3: Language Links & Subtle Admin Gear */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
             {/* Language Selection Links: عربي | English (subtly glowing) */}
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0b1323] border border-[#00f0ff]/30 text-xs shadow-[0_0_8px_rgba(0,240,255,0.2)]">
-              <Globe className="w-3.5 h-3.5 text-[#00f0ff]" />
+            <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg bg-[#0b1323] border border-[#00f0ff]/30 text-xs shadow-[0_0_8px_rgba(0,240,255,0.2)]">
+              <Globe className="w-3.5 h-3.5 text-[#00f0ff] shrink-0" />
               <button
                 type="button"
                 onClick={() => setCurrentLang('ar')}
@@ -101,14 +102,15 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                English
+                <span className="hidden sm:inline">English</span>
+                <span className="sm:hidden">EN</span>
               </button>
             </div>
 
             {isAdminAuthenticated && (
               <button
                 onClick={() => setIsAdminDashboardOpen(true)}
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/40 text-xs font-mono shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/40 text-xs font-mono shadow-[0_0_10px_rgba(16,185,129,0.3)]"
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>ADMIN ACTIVE</span>
@@ -120,7 +122,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
               onClick={handleAdminClick}
               aria-label="إعدادات النظام المشرف"
               title="لوحة الإدارة (0000)"
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center opacity-40 hover:opacity-100 focus:opacity-100 transition-all text-[#00f0ff] hover:text-white bg-[#0b1424] border border-[#00f0ff]/30 shadow-[0_0_8px_rgba(0,240,255,0.25)] hover:shadow-[0_0_16px_rgba(0,240,255,0.6)] focus:outline-none"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center opacity-50 hover:opacity-100 focus:opacity-100 transition-all text-[#00f0ff] hover:text-white bg-[#0b1424] border border-[#00f0ff]/30 shadow-[0_0_8px_rgba(0,240,255,0.25)] hover:shadow-[0_0_16px_rgba(0,240,255,0.6)] focus:outline-none shrink-0"
             >
               <Settings className="w-4 h-4 sm:w-5 sm:h-5 transition-transform hover:rotate-90 duration-500" />
             </button>
@@ -128,20 +130,20 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
         </div>
 
         {/* Mobile Navigation bar */}
-        <div className="flex lg:hidden border-t border-[#00f0ff]/20 py-2 gap-1 overflow-x-auto text-xs">
+        <div className="flex lg:hidden border-t border-[#00f0ff]/20 py-2 gap-1.5 overflow-x-auto no-scrollbar text-xs">
           <button
             onClick={() => setActiveTab('planner')}
-            className={`flex-1 py-1.5 px-2 rounded-lg text-center whitespace-nowrap font-bold transition-all ${
+            className={`flex-1 min-h-[44px] py-2 px-2.5 rounded-lg text-center whitespace-nowrap font-bold transition-all text-xs ${
               activeTab === 'planner'
                 ? 'bg-[#00f0ff] text-[#060911] shadow-[0_0_12px_rgba(0,240,255,0.6)]'
                 : 'text-slate-300 hover:bg-[#0c1626]'
             }`}
           >
-            حاسبة التذاكر
+            حاسبة الرحلات
           </button>
           <button
             onClick={() => setActiveTab('explorer')}
-            className={`flex-1 py-1.5 px-2 rounded-lg text-center whitespace-nowrap font-bold transition-all ${
+            className={`flex-1 min-h-[44px] py-2 px-2.5 rounded-lg text-center whitespace-nowrap font-bold transition-all text-xs ${
               activeTab === 'explorer'
                 ? 'bg-[#00f0ff] text-[#060911] shadow-[0_0_12px_rgba(0,240,255,0.6)]'
                 : 'text-slate-300 hover:bg-[#0c1626]'
@@ -151,7 +153,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
           </button>
           <button
             onClick={() => setActiveTab('fares')}
-            className={`flex-1 py-1.5 px-2 rounded-lg text-center whitespace-nowrap font-bold transition-all ${
+            className={`flex-1 min-h-[44px] py-2 px-2.5 rounded-lg text-center whitespace-nowrap font-bold transition-all text-xs ${
               activeTab === 'fares'
                 ? 'bg-[#00f0ff] text-[#060911] shadow-[0_0_12px_rgba(0,240,255,0.6)]'
                 : 'text-slate-300 hover:bg-[#0c1626]'

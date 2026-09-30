@@ -39,30 +39,30 @@ export const NetworkExplorer: React.FC = () => {
           </div>
 
           {/* Segmented View Mode Switcher */}
-          <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl self-start sm:self-auto border border-slate-200">
+          <div className="grid grid-cols-2 sm:flex items-center gap-1 p-1 bg-slate-100 rounded-xl w-full sm:w-auto border border-slate-200">
             <button
               type="button"
               onClick={() => setViewMode('graph')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`flex items-center justify-center gap-2 px-3 sm:px-3.5 py-2 sm:py-1.5 text-xs font-semibold rounded-lg transition-all min-h-[40px] sm:min-h-0 ${
                 viewMode === 'graph'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <GitMerge className="w-3.5 h-3.5" />
-              <span>مخطط الشبكة (Flowchart Graph)</span>
+              <GitMerge className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">مخطط الشبكة</span>
             </button>
             <button
               type="button"
               onClick={() => setViewMode('directory')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`flex items-center justify-center gap-2 px-3 sm:px-3.5 py-2 sm:py-1.5 text-xs font-semibold rounded-lg transition-all min-h-[40px] sm:min-h-0 ${
                 viewMode === 'directory'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <ListFilter className="w-3.5 h-3.5" />
-              <span>دليل وبحث المحطات</span>
+              <ListFilter className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">دليل المحطات</span>
             </button>
           </div>
         </div>

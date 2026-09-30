@@ -15,7 +15,7 @@ export const CyberpunkTrainGraphic: React.FC<CyberpunkTrainGraphicProps> = ({ mo
       <div className="absolute bottom-1 right-1 w-3 h-3 border-b-2 border-r-2 border-[#00f0ff] opacity-80"></div>
 
       {/* Top HUD Telemetry Line */}
-      <div className="flex items-center justify-between text-[10px] tracking-wider text-[#00f0ff] mb-2 px-1 font-mono">
+      <div className="flex flex-wrap sm:flex-nowrap items-center justify-between text-[9px] sm:text-[10px] tracking-wider text-[#00f0ff] mb-2 px-1 font-mono gap-1">
         <span className="flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-[#00f0ff] animate-ping"></span>
           SYS.TRANSPORT // {modeName}
@@ -24,7 +24,7 @@ export const CyberpunkTrainGraphic: React.FC<CyberpunkTrainGraphicProps> = ({ mo
       </div>
 
       {/* Futuristic High-Speed Train Vector Illustration */}
-      <div className="relative h-32 sm:h-40 w-full flex items-center justify-center overflow-hidden rounded-lg bg-[#050811]/90 border border-[#00f0ff]/30 shadow-[inset_0_0_20px_rgba(0,240,255,0.15)]">
+      <div className="relative h-28 sm:h-36 lg:h-40 w-full flex items-center justify-center overflow-hidden rounded-lg bg-[#050811]/90 border border-[#00f0ff]/30 shadow-[inset_0_0_20px_rgba(0,240,255,0.15)]">
         {/* Animated Cyber Speed Grid / Grid Floor Lines */}
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_40%,rgba(0,240,255,0.08)_95%)] pointer-events-none"></div>
         <div className="absolute bottom-0 inset-x-0 h-12 bg-[repeating-linear-gradient(90deg,transparent,transparent_20px,rgba(0,240,255,0.15)_20px,rgba(0,240,255,0.15)_22px)] opacity-60"></div>
